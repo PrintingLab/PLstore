@@ -152,8 +152,7 @@ class AuthorizeController extends Controller
     				"getCode" => $tresponse->getMessages()[0]->getCode(),
     				"getDescription" => $tresponse->getMessages()[0]->getDescription(),
     			);
-    			return response()->json(['success'=>$array]
-    				;
+    			return response()->json(['success'=>$array]);
     		} else {
     			if ($tresponse->getErrors() != null) {
     				$array = array(
