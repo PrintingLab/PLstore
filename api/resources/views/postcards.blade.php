@@ -661,6 +661,7 @@ function printedside_change(){
   var attr2=$("#stock").val();
   var attr3=$("#printedside").val();
   $.get("postcardsattr3/"+attr1+"/"+attr2+"/"+attr3, function(result){
+    console.log(result)
     $("#row_edge_2").css({display: 'none'});
     $("#row_edge").css({display: 'none'});
     $('#coating').empty();
@@ -678,9 +679,9 @@ function printedside_change(){
     printingtime_inicial()
     document.getElementById("idE").value =result[0].id_especificaciones;
     document.getElementById("idE2").value =result[0].id_especificaciones;
-    document.getElementById("Rselectcaras").value =result[0].attr3;
-    document.getElementById("Rselectcaras2").value =result[0].attr3;
-    $("#_sides").val(result[0].attr3)
+    document.getElementById("Rselectcaras").value =attr3;
+    document.getElementById("Rselectcaras2").value =attr3;
+    $("#_sides").val(attr3)
     $("#_Corners").val(result[0].attr5)
     $("#_idspc").val(result[0].id_especificaciones);
   })
