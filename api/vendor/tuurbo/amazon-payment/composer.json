@@ -1,0 +1,24 @@
+{
+	"name": "tuurbo/amazon-payment",
+	"description": "Login and Pay with Amazon",
+	"keywords": ["laravel", "amazon", "payment", "amazon pay", "credit card"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Daniel Fraser",
+			"email": "dlf1987+github@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"guzzlehttp/guzzle": "^6.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Tuurbo\\AmazonPayment\\": "src/"
+		}
+	},
+	"require-dev": {
+		"phpspec/phpspec": "~2.0"
+	}
+}
