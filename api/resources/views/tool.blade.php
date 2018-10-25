@@ -11,7 +11,6 @@ Products - Printing Lab
  </div>
  <div class="container" id="toolcontainer" style="display: none;">
   <div class="col-12 top_toolbar">
-
 <!--    <button ng-click="claaremplate()" >Clear canvas</button>
  <button ng-click="BDtemplate(1)" disabled="">loadJSONtamplates</button>  -->
  <div class="clearfix" style="padding-bottom: 10px;">
@@ -527,7 +526,6 @@ Products - Printing Lab
         <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
       </div>
     </div>
-
     <div class="row text-center text-lg-left">
       <div ng-repeat="items in canvastemplate  | filter:{type:{{$class}},name:templatefilter}:true | orderBy:'name'" class="show-image col-lg-3 col-md-4 col-xs-6" style="height: auto;max-width: 15%;">
        <h5 style="text-align: center;">@{{items.name}}</h5>

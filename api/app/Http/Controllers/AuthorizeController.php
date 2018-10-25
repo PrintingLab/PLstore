@@ -21,6 +21,7 @@ class AuthorizeController extends Controller
 		$merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
 		
 		//sandbox
+
 		//$merchantAuthentication->setName('2E3z6KruR');
 		//$merchantAuthentication->setTransactionKey('48Cy6rk4H82xD6b9');
         //production
@@ -62,6 +63,7 @@ class AuthorizeController extends Controller
 		$request->setTransactionRequest($transactionRequestType);
 		$controller = new AnetController\CreateTransactionController($request);
 		$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+
 		if ($response != null) {
 			if ($response->getMessages()->getResultCode() == "Ok") {
 				$tresponse = $response->getTransactionResponse();
@@ -186,7 +188,6 @@ class AuthorizeController extends Controller
     } else {
     	return response()->json(['success'=>'No response returned']);
     }
-
 }
 
 }

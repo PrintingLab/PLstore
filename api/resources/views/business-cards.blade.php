@@ -766,7 +766,7 @@ function printedside_change(){
         $("#corners").append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>");
         $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
         $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-        $('#labeltxt').html(result[0].atr12);
+        $('#labeltxt').html(result[0].attr12);
         coating()
         corners()
         quantity_inicial()
@@ -799,7 +799,7 @@ function printedside_change(){
         $("#corners").append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>");
         $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
         $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-        $('#labeltxt').html(result[0].atr12);
+        $('#labeltxt').html(result[0].attr12);
         coating()
         corners()
         quantity_inicial()
@@ -837,7 +837,7 @@ function coating_change(){
       $("#corners").append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>");
       $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
       $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-      $('#labeltxt').html(result[0].atr12);
+      $('#labeltxt').html(result[0].attr12);
       corners()
       quantity_inicial()
       printingtime_inicial()
@@ -874,7 +874,7 @@ function corners_change(){
       $('#printingtime').empty();
       $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
       $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-      $('#labeltxt').html(result[0].atr12);
+      $('#labeltxt').html(result[0].attr12);
       quantity_inicial()
       printingtime_inicial()
       document.getElementById("idE").value =result[0].id_especificaciones;
@@ -909,7 +909,7 @@ function quantity_change(){
         $('#labeltxt').empty();
         $('#printingtime').empty();
         $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-        $('#labeltxt').html(result[0].atr12);
+        $('#labeltxt').html(result[0].attr12);
         printingtime_inicial()
         document.getElementById("idE").value =result[0].id_especificaciones;
         document.getElementById("idE2").value =result[0].id_especificaciones;
@@ -932,7 +932,7 @@ function quantity_change(){
         $('#labeltxt').empty();
         $('#printingtime').empty();
         $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-        $('#labeltxt').html(result[0].atr12);
+        $('#labeltxt').html(result[0].attr12);
         printingtime_inicial()
         document.getElementById("idE").value =result[0].id_especificaciones;
         document.getElementById("idE2").value =result[0].id_especificaciones;

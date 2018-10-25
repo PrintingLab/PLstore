@@ -388,11 +388,11 @@ class CarController extends Controller
             $notas=1;
           }
           if ($attr6==""){
-            $consulta_attr10=DB::select("SELECT DISTINCT(attr10) FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5'");
+            $consulta_attr10=DB::select("SELECT DISTINCT(attr10) FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5' ORDER by attr10");
             $consulta_attr11=DB::select("SELECT DISTINCT(attr11)  FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5' AND attr10=$attr10");
             return response()->json( array($id_product,$E_product,$attr1,$attr2,$attr3,$attr4,$attr5,$attr6,$attr10,$attr11,$attr12,$consulta_attr10,$consulta_attr11,$notas));
           }else{
-            $consulta_attr10=DB::select("SELECT DISTINCT(attr10) FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5' AND attr6='$attr6'");
+            $consulta_attr10=DB::select("SELECT DISTINCT(attr10) FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5' AND attr6='$attr6' ORDER by attr10");
             $consulta_attr11=DB::select("SELECT DISTINCT(attr11)  FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5' AND attr6='$attr6' AND attr10=$attr10");
             $consultaattr6=DB::select("SELECT DISTINCT(attr6) FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones=especificaciones.id_especificaciones JOIN productos on productos.id_productos= especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2'");
             return response()->json( array($id_product,$E_product,$attr1,$attr2,$attr3,$attr4,$attr5,$attr6,$consultaattr6,$attr10,$attr11,$attr12,$consulta_attr10,$consulta_attr11,$notas));
@@ -400,269 +400,240 @@ class CarController extends Controller
         }
         if ($arreglo[$key]['IdC']==5){
           $id_product=$arreglo[$key]['IdP'];
+          $E_product=$arreglo[$key]['IdE'];
           $attr1=$arreglo[$key]['attr1'];
           $attr2=$arreglo[$key]['attr2'];
           $attr3=$arreglo[$key]['attr3'];
           $attr4=$arreglo[$key]['attr4'];
           $attr5=$arreglo[$key]['attr5'];
-          $attr6=$arreglo[$key]['attr6'];
           $attr10=$arreglo[$key]['attr10'];
           $attr11=$arreglo[$key]['attr11'];
           $attr12=$arreglo[$key]['attr12'];
-          if (($attr1=='3" x 4"' && $attr4=='Matte/Dull Finish')||($attr1=='3" x 4"' && $attr4=='Full UV on Front Only')) {
-            $consultaattr10=DB::select("SELECT DISTINCT attr10 FROM especificaciones JOIN especixproduct
-              ON especixproduct.id_especificaciones= especificaciones.id_especificaciones
-              JOIN productos on productos.id_productos= especixproduct.id_productos
-              WHERE productos.id_productos=10 and attr1='$attr1' and attr2='$attr2' and attr3='$attr3' and attr4='$attr4' and attr5='$attr5'");
-              $attr5_array=1;
-            }
-            elseif (($attr1=='4" x 6"' && $attr4=='Matte/Dull Finish')||($attr1=='4" x 6"'&&$attr4=='UV Co$ating')||  ($attr1=='4" x 6"' && $attr2!='18 Point C1S' && $attr4=='Full UV on Front Only')) {
-              $consultaattr10=DB::select("SELECT DISTINCT attr10 FROM especificaciones JOIN especixproduct
-                ON especixproduct.id_especificaciones= especificaciones.id_especificaciones
-                JOIN productos on productos.id_productos= especixproduct.id_productos
-                WHERE productos.id_productos=10 and attr1='$attr1' and attr2='$attr2' and attr3='$attr3' and attr4='$attr4' and attr5='$attr5'");
-                $attr5_array=2;
-              }
-              else{
-                $attr5_array=0;
-                $consultaattr10=DB::select("SELECT DISTINCT attr10 FROM especificaciones JOIN especixproduct
-                  ON especixproduct.id_especificaciones= especificaciones.id_especificaciones
-                  JOIN productos on productos.id_productos= especixproduct.id_productos
-                  WHERE productos.id_productos=10 and attr1='$attr1' and attr2='$attr2' and attr3='$attr3' and attr4='$attr4'");
-                }
-                return response()->json( array($id_product,$attr1,$attr2,$attr3,$attr4,$attr5,$attr5_array,$attr6,$consultaattr10));
-              }
-            }
+          $notas=$arreglo[$key]['Notas2'];
+          if ($notas==""){
+            $notas=0;
+          }else{
+            $notas=1;
+          }
+          if ($attr5==""){
+            $consulta_attr10=DB::select("SELECT DISTINCT(attr10) FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' ORDER by attr10");
+            $consulta_attr11=DB::select("SELECT DISTINCT(attr11)  FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4'   AND attr10=$attr10");
+            return response()->json( array($id_product,$E_product,$attr1,$attr2,$attr3,$attr4,$attr5,$attr10,$attr11,$attr12,$consulta_attr10,$consulta_attr11,$notas));
+          }else{
+            $consulta_attr10=DB::select("SELECT DISTINCT(attr10) FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5' ORDER by attr10");
+            $consulta_attr11=DB::select("SELECT DISTINCT(attr11)  FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5'  AND attr10=$attr10");
+            return response()->json( array($id_product,$E_product,$attr1,$attr2,$attr3,$attr4,$attr5,$attr10,$attr11,$attr12,$consulta_attr10,$consulta_attr11,$notas));
           }
         }
+      }
+    }
+  }
 
-        public function ConsultUpdateDetails($id_A){
-          $arreglo =Session::get('carrito');
-          foreach ($arreglo as $key => $value) {
-            if ($arreglo[$key]['IdA']==$id_A) {
-              $id_product=$arreglo[$key]['IdP'];
-              $Notas=$arreglo[$key]['Notas'];
-            }
-          }
-          return response()->json( array($id_product,$Notas));
-        }
+  public function ConsultUpdateDetails($id_A){
+    $arreglo =Session::get('carrito');
+    foreach ($arreglo as $key => $value) {
+      if ($arreglo[$key]['IdA']==$id_A) {
+        $id_product=$arreglo[$key]['IdP'];
+        $Notas=$arreglo[$key]['Notas'];
+      }
+    }
+    return response()->json( array($id_product,$Notas));
+  }
 
-        public function quantity_business_cards(Request $request){
-          $id_product = $request->idp;
-          $attr1 = $request->atr1;
-          $attr2 = $request->atr2;
-          $attr3 = $request->atr3;
-          $attr4 = $request->atr4;
-          $attr5 = $request->atr5;
-          $attr10 = $request->atr10;
-          $consulta_11=DB::select("SELECT especificaciones.id_especificaciones,attr11, MIN(attr12) as atr12 FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos= especixproduct.id_productos WHERE especixproduct.id_productos=$id_product and attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3'
-          AND attr4='$attr4' AND attr5='$attr5' AND attr10='$attr10'");
-          $select_11=DB::select("SELECT DISTINCT(attr11)  FROM especificaciones JOIN especixproduct ON especixproduct.id_especificaciones= especificaciones.id_especificaciones JOIN productos on productos.id_productos=especixproduct.id_productos WHERE productos.id_productos=$id_product AND attr1='$attr1' AND attr2='$attr2' AND attr3='$attr3' AND attr4='$attr4' AND attr5='$attr5' AND attr10=$attr10");
-          return response()->json( array($consulta_11,$select_11));
+  public function update(Request $request){
+    $idA = $request->idA;
+    //validar color
+    $validate6=$request->edge_color;
+    //return view('cart',['total'=>$attr6]);
+    $arreglo =Session::get('carrito');
+    $carro =array();
+    foreach ($arreglo as $key => $value) {
+      if ($arreglo[$key]['IdA']==$idA){
+        if ($arreglo[$key]['IdC']==1){
+          $attr10=$request->quantity;
+          $attr10=intval($attr10);
+          $attr11=$request->printingtime;
+          $attr12=$request->total_update;
+          $attr12=floatval($attr12);
+          if ($arreglo[$key]['attr6']=="") {
+            $attr6=$arreglo[$key]['attr6'];
+          }else{
+            $attr6=$request->edge_color;
+          }
+          $attr1=$arreglo[$key]['attr1'];
+          $attr2=$arreglo[$key]['attr2'];
+          $attr3=$arreglo[$key]['attr3'];
+          $attr4=$arreglo[$key]['attr4'];
+          $attr5=$arreglo[$key]['attr5'];
+          //  $consultaid_E=DB::select("SELECT id_especificaciones FROM especificaciones WHERE attr1='$attr1' and attr2='$attr2' and attr3  ='$attr3' and attr4='$attr4' and attr5='$attr5' and attr6='$attr6' and attr10 ='$attr10' and attr11 ='$attr11' and attr12 ='$attr12'");
+          $idE=$request->idE;
+          //dd($idE);
+          $nuevo_carro = [
+            'IdA'=>$arreglo[$key]['IdA'],
+            'IdC'=>$arreglo[$key]['IdC'],
+            'IdP'=>$arreglo[$key]['IdP'],
+            'IdE'=>$idE,
+            'face'=>$arreglo[$key]['face'],
+            'nombre'=>$arreglo[$key]['nombre'],
+            'attr1'=>$arreglo[$key]['attr1'],
+            'attr2'=>$arreglo[$key]['attr2'],
+            'attr3'=>$arreglo[$key]['attr3'],
+            'attr4'=>$arreglo[$key]['attr4'],
+            'attr5'=>$arreglo[$key]['attr5'],
+            'attr6'=>$attr6,
+            'attr10'=>$attr10,
+            'attr11'=>$attr11,
+            'attr12'=>$attr12,
+            'img1'=>$arreglo[$key]['img1'],
+            'img2'=>$arreglo[$key]['img2'],
+            'Imagen'=>$arreglo[$key]['Imagen'],
+            'ArchivoA'=>$arreglo[$key]['ArchivoA'],
+            'ArchivoB'=>$arreglo[$key]['ArchivoB'],
+            'Notas'=>$arreglo[$key]['Notas'],
+            'Notas2'=>$arreglo[$key]['Notas2'],
+          ];
+          array_push($carro, $nuevo_carro);
         }
+        elseif ($arreglo[$key]['IdC']==5){
+          $attr10=$request->quantity_postcards;
+          $attr10=intval($attr10);
+          $attr11=$request->printingtime_postcards;
+          $attr12=$request->total_update_postcards;
+          $attr12=floatval($attr12);
+          $nuevo_carro = [
+            'IdA'=>$arreglo[$key]['IdA'],
+            'IdC'=>$arreglo[$key]['IdC'],
+            'IdP'=>$arreglo[$key]['IdP'],
+            'IdE'=>$request->Modal_idE_postcards,
+            'face'=>$arreglo[$key]['face'],
+            'nombre'=>$arreglo[$key]['nombre'],
+            'attr1'=>$arreglo[$key]['attr1'],
+            'attr2'=>$arreglo[$key]['attr2'],
+            'attr3'=>$arreglo[$key]['attr3'],
+            'attr4'=>$arreglo[$key]['attr4'],
+            'attr5'=>$arreglo[$key]['attr5'],
+            'attr6'=>$arreglo[$key]['attr6'],
+            'attr10'=>$attr10,
+            'attr11'=>$attr11,
+            'attr12'=>$attr12,
+            'img1'=>$arreglo[$key]['img1'],
+            'img2'=>$arreglo[$key]['img2'],
+            'Imagen'=>$arreglo[$key]['Imagen'],
+            'ArchivoA'=>$arreglo[$key]['ArchivoA'],
+            'ArchivoB'=>$arreglo[$key]['ArchivoB'],
+            'Notas'=>$arreglo[$key]['Notas'],
+            'Notas2'=>$arreglo[$key]['Notas2'],
+          ];
+          array_push($carro, $nuevo_carro);
+        }
+      }
+      //no es el producto seleccionado
+      else {
+        $nuevo_carro=[
+          'IdA'=>$arreglo[$key]['IdA'],
+          'IdC'=>$arreglo[$key]['IdC'],
+          'IdP'=>$arreglo[$key]['IdP'],
+          'IdE'=>$arreglo[$key]['IdE'],
+          'face'=>$arreglo[$key]['face'],
+          'nombre'=>$arreglo[$key]['nombre'],
+          'attr1'=>$arreglo[$key]['attr1'],
+          'attr2'=>$arreglo[$key]['attr2'],
+          'attr3'=>$arreglo[$key]['attr3'],
+          'attr4'=>$arreglo[$key]['attr4'],
+          'attr5'=>$arreglo[$key]['attr5'],
+          'attr6'=>$arreglo[$key]['attr6'],
+          'attr10'=>$arreglo[$key]['attr10'],
+          'attr11'=>$arreglo[$key]['attr11'],
+          'attr12'=>$arreglo[$key]['attr12'],
+          'img1'=>$arreglo[$key]['img1'],
+          'img2'=>$arreglo[$key]['img2'],
+          'Imagen'=>$arreglo[$key]['Imagen'],
+          'ArchivoA'=>$arreglo[$key]['ArchivoA'],
+          'ArchivoB'=>$arreglo[$key]['ArchivoB'],
+          'Notas'=>$arreglo[$key]['Notas'],
+          'Notas2'=>$arreglo[$key]['Notas2'],
+        ];
+        array_push($carro, $nuevo_carro);
+      }
+    }
+    Session::put('carrito', $carro);
+    $arreglo2 =Session::get('carrito');
+    $total=0;
+    foreach ($arreglo2 as $key => $value) {
+      $total=$arreglo2[$key]['attr12']+$total;
+    }
+    return view('cart',['total'=>$total]);
+  }
 
-        public function update(Request $request){
-          $idA = $request->idA;
-          //validar color
-          $validate6=$request->edge_color;
-          //return view('cart',['total'=>$attr6]);
-          $arreglo =Session::get('carrito');
-          $carro =array();
-          foreach ($arreglo as $key => $value) {
-            if ($arreglo[$key]['IdA']==$idA){
-              if ($arreglo[$key]['IdC']==1){
-                $attr10=$request->quantity;
-                $attr10=intval($attr10);
-                $attr11=$request->printingtime;
-                $attr12=$request->total_update;
-                $attr12=floatval($attr12);
-                if ($arreglo[$key]['attr6']=="") {
-                  $attr6=$arreglo[$key]['attr6'];
-                }else{
-                  $attr6=$request->edge_color;
-                }
-                $attr1=$arreglo[$key]['attr1'];
-                $attr2=$arreglo[$key]['attr2'];
-                $attr3=$arreglo[$key]['attr3'];
-                $attr4=$arreglo[$key]['attr4'];
-                $attr5=$arreglo[$key]['attr5'];
-                //  $consultaid_E=DB::select("SELECT id_especificaciones FROM especificaciones WHERE attr1='$attr1' and attr2='$attr2' and attr3  ='$attr3' and attr4='$attr4' and attr5='$attr5' and attr6='$attr6' and attr10 ='$attr10' and attr11 ='$attr11' and attr12 ='$attr12'");
-                $idE=$request->idE;
-                //dd($idE);
-                $nuevo_carro = [
-                  'IdA'=>$arreglo[$key]['IdA'],
-                  'IdC'=>$arreglo[$key]['IdC'],
-                  'IdP'=>$arreglo[$key]['IdP'],
-                  'IdE'=>$idE,
-                  'face'=>$arreglo[$key]['face'],
-                  'nombre'=>$arreglo[$key]['nombre'],
-                  'attr1'=>$arreglo[$key]['attr1'],
-                  'attr2'=>$arreglo[$key]['attr2'],
-                  'attr3'=>$arreglo[$key]['attr3'],
-                  'attr4'=>$arreglo[$key]['attr4'],
-                  'attr5'=>$arreglo[$key]['attr5'],
-                  'attr6'=>$attr6,
-                  'attr10'=>$attr10,
-                  'attr11'=>$attr11,
-                  'attr12'=>$attr12,
-                  'img1'=>$arreglo[$key]['img1'],
-                  'img2'=>$arreglo[$key]['img2'],
-                  'Imagen'=>$arreglo[$key]['Imagen'],
-                  'ArchivoA'=>$arreglo[$key]['ArchivoA'],
-                  'ArchivoB'=>$arreglo[$key]['ArchivoB'],
-                  'Notas'=>$arreglo[$key]['Notas'],
-                  'Notas2'=>$arreglo[$key]['Notas2'],
-                ];
-                array_push($carro, $nuevo_carro);
-              }
-              elseif ($arreglo[$key]['IdC']==5){
-                $attr10=$request->quantity_postcards;
-                $attr11=$request->printingtime_postcards;
-                $attr12=$request->total_update_postcards;
-                $attr1=$arreglo[$key]['attr1'];
-                $attr2=$arreglo[$key]['attr2'];
-                $attr3=$arreglo[$key]['attr3'];
-                $attr4=$arreglo[$key]['attr4'];
-                $attr5=$arreglo[$key]['attr5'];
-                $consultaid_E=DB::select("SELECT id_especificaciones FROM especificaciones WHERE attr1='$attr1' and attr2='$attr2' and attr3  ='$attr3' and attr4='$attr4' and attr5='$attr5' and attr10 ='$attr10' and attr11 ='$attr11' and attr12 ='$attr12'");
-                $idE=$consultaid_E[0]->id_especificaciones;
-                if (!$arreglo[$key]['Notas']=='' ) {
-                  $attr12=$attr12+50;
-                }
-                $nuevo_carro = [
-                  'IdA'=>$arreglo[$key]['IdA'],
-                  'IdC'=>$arreglo[$key]['IdC'],
-                  'IdP'=>$arreglo[$key]['IdP'],
-                  'IdE'=>$idE,
-                  'face'=>$arreglo[$key]['face'],
-                  'nombre'=>$arreglo[$key]['nombre'],
-                  'attr1'=>$arreglo[$key]['attr1'],
-                  'attr2'=>$arreglo[$key]['attr2'],
-                  'attr3'=>$arreglo[$key]['attr3'],
-                  'attr4'=>$arreglo[$key]['attr4'],
-                  'attr5'=>$arreglo[$key]['attr5'],
-                  'attr6'=>$arreglo[$key]['attr6'],
-                  'attr10'=>$attr10,
-                  'attr11'=>$attr11,
-                  'attr12'=>$attr12,
-                  'img1'=>$arreglo[$key]['img1'],
-                  'img2'=>$arreglo[$key]['img2'],
-                  'Imagen'=>$arreglo[$key]['Imagen'],
-                  'ArchivoA'=>$arreglo[$key]['ArchivoA'],
-                  'ArchivoB'=>$arreglo[$key]['ArchivoB'],
-                  'Notas'=>$arreglo[$key]['Notas'],
-                  'Notas2'=>$arreglo[$key]['Notas2'],
-                ];
-                array_push($carro, $nuevo_carro);
-              }
-            }
-            //no es el producto seleccionado
-            else {
-              $nuevo_carro=[
-                'IdA'=>$arreglo[$key]['IdA'],
-                'IdC'=>$arreglo[$key]['IdC'],
-                'IdP'=>$arreglo[$key]['IdP'],
-                'IdE'=>$arreglo[$key]['IdE'],
-                'face'=>$arreglo[$key]['face'],
-                'nombre'=>$arreglo[$key]['nombre'],
-                'attr1'=>$arreglo[$key]['attr1'],
-                'attr2'=>$arreglo[$key]['attr2'],
-                'attr3'=>$arreglo[$key]['attr3'],
-                'attr4'=>$arreglo[$key]['attr4'],
-                'attr5'=>$arreglo[$key]['attr5'],
-                'attr6'=>$arreglo[$key]['attr6'],
-                'attr10'=>$arreglo[$key]['attr10'],
-                'attr11'=>$arreglo[$key]['attr11'],
-                'attr12'=>$arreglo[$key]['attr12'],
-                'img1'=>$arreglo[$key]['img1'],
-                'img2'=>$arreglo[$key]['img2'],
-                'Imagen'=>$arreglo[$key]['Imagen'],
-                'ArchivoA'=>$arreglo[$key]['ArchivoA'],
-                'ArchivoB'=>$arreglo[$key]['ArchivoB'],
-                'Notas'=>$arreglo[$key]['Notas'],
-                'Notas2'=>$arreglo[$key]['Notas2'],
-              ];
-              array_push($carro, $nuevo_carro);
-            }
-          }
-          Session::put('carrito', $carro);
-          $arreglo2 =Session::get('carrito');
-          $total=0;
-          foreach ($arreglo2 as $key => $value) {
-            $total=$arreglo2[$key]['attr12']+$total;
-          }
-          return view('cart',['total'=>$total]);
-        }
-
-        public function UpdateDetails(Request $request){
-          $idA = $request->idA;
-          $Notas=$request->comentario;
-          $arreglo =Session::get('carrito');
-          $carro =array();
-          foreach ($arreglo as $key => $value) {
-            if ($arreglo[$key]['IdA']==$idA){
-              $nuevo_carro = [
-                'IdA'=>$arreglo[$key]['IdA'],
-                'IdC'=>$arreglo[$key]['IdC'],
-                'IdP'=>$arreglo[$key]['IdP'],
-                'IdE'=>$arreglo[$key]['IdE'],
-                'face'=>$arreglo[$key]['face'],
-                'nombre'=>$arreglo[$key]['nombre'],
-                'attr1'=>$arreglo[$key]['attr1'],
-                'attr2'=>$arreglo[$key]['attr2'],
-                'attr3'=>$arreglo[$key]['attr3'],
-                'attr4'=>$arreglo[$key]['attr4'],
-                'attr5'=>$arreglo[$key]['attr5'],
-                'attr6'=>$arreglo[$key]['attr6'],
-                'attr10'=>$arreglo[$key]['attr10'],
-                'attr11'=>$arreglo[$key]['attr11'],
-                'attr12'=>$arreglo[$key]['attr12'],
-                'img1'=>$arreglo[$key]['img1'],
-                'img2'=>$arreglo[$key]['img2'],
-                'Imagen'=>$arreglo[$key]['Imagen'],
-                'ArchivoA'=>$arreglo[$key]['ArchivoA'],
-                'ArchivoB'=>$arreglo[$key]['ArchivoB'],
-                'Notas'=>$Notas,
-                'Notas2'=>$arreglo[$key]['Notas2'],
-              ];
-              array_push($carro, $nuevo_carro);
-            }
-            else{
-              $nuevo_carro=[
-                'IdA'=>$arreglo[$key]['IdA'],
-                'IdC'=>$arreglo[$key]['IdC'],
-                'IdP'=>$arreglo[$key]['IdP'],
-                'IdE'=>$arreglo[$key]['IdE'],
-                'face'=>$arreglo[$key]['face'],
-                'nombre'=>$arreglo[$key]['nombre'],
-                'attr1'=>$arreglo[$key]['attr1'],
-                'attr2'=>$arreglo[$key]['attr2'],
-                'attr3'=>$arreglo[$key]['attr3'],
-                'attr4'=>$arreglo[$key]['attr4'],
-                'attr5'=>$arreglo[$key]['attr5'],
-                'attr6'=>$arreglo[$key]['attr6'],
-                'attr10'=>$arreglo[$key]['attr10'],
-                'attr11'=>$arreglo[$key]['attr11'],
-                'attr12'=>$arreglo[$key]['attr12'],
-                'img1'=>$arreglo[$key]['img1'],
-                'img2'=>$arreglo[$key]['img2'],
-                'Imagen'=>$arreglo[$key]['Imagen'],
-                'ArchivoA'=>$arreglo[$key]['ArchivoA'],
-                'ArchivoB'=>$arreglo[$key]['ArchivoB'],
-                'Notas'=>$arreglo[$key]['Notas'],
-                'Notas2'=>$arreglo[$key]['Notas2'],
-              ];
-              array_push($carro, $nuevo_carro);
-            }
-          }
-          Session::put('carrito', $carro);
-          $arreglo2 =Session::get('carrito');
-          $total=0;
-          foreach ($arreglo2 as $key => $value) {
-            $total=$arreglo2[$key]['attr12']+$total;
-          }
-          return view('cart',['total'=>$total]);
-        }
+  public function UpdateDetails(Request $request){
+    $idA = $request->idA;
+    $Notas=$request->comentario;
+    $arreglo =Session::get('carrito');
+    $carro =array();
+    foreach ($arreglo as $key => $value) {
+      if ($arreglo[$key]['IdA']==$idA){
+        $nuevo_carro = [
+          'IdA'=>$arreglo[$key]['IdA'],
+          'IdC'=>$arreglo[$key]['IdC'],
+          'IdP'=>$arreglo[$key]['IdP'],
+          'IdE'=>$arreglo[$key]['IdE'],
+          'face'=>$arreglo[$key]['face'],
+          'nombre'=>$arreglo[$key]['nombre'],
+          'attr1'=>$arreglo[$key]['attr1'],
+          'attr2'=>$arreglo[$key]['attr2'],
+          'attr3'=>$arreglo[$key]['attr3'],
+          'attr4'=>$arreglo[$key]['attr4'],
+          'attr5'=>$arreglo[$key]['attr5'],
+          'attr6'=>$arreglo[$key]['attr6'],
+          'attr10'=>$arreglo[$key]['attr10'],
+          'attr11'=>$arreglo[$key]['attr11'],
+          'attr12'=>$arreglo[$key]['attr12'],
+          'img1'=>$arreglo[$key]['img1'],
+          'img2'=>$arreglo[$key]['img2'],
+          'Imagen'=>$arreglo[$key]['Imagen'],
+          'ArchivoA'=>$arreglo[$key]['ArchivoA'],
+          'ArchivoB'=>$arreglo[$key]['ArchivoB'],
+          'Notas'=>$Notas,
+          'Notas2'=>$arreglo[$key]['Notas2'],
+        ];
+        array_push($carro, $nuevo_carro);
+      }
+      else{
+        $nuevo_carro=[
+          'IdA'=>$arreglo[$key]['IdA'],
+          'IdC'=>$arreglo[$key]['IdC'],
+          'IdP'=>$arreglo[$key]['IdP'],
+          'IdE'=>$arreglo[$key]['IdE'],
+          'face'=>$arreglo[$key]['face'],
+          'nombre'=>$arreglo[$key]['nombre'],
+          'attr1'=>$arreglo[$key]['attr1'],
+          'attr2'=>$arreglo[$key]['attr2'],
+          'attr3'=>$arreglo[$key]['attr3'],
+          'attr4'=>$arreglo[$key]['attr4'],
+          'attr5'=>$arreglo[$key]['attr5'],
+          'attr6'=>$arreglo[$key]['attr6'],
+          'attr10'=>$arreglo[$key]['attr10'],
+          'attr11'=>$arreglo[$key]['attr11'],
+          'attr12'=>$arreglo[$key]['attr12'],
+          'img1'=>$arreglo[$key]['img1'],
+          'img2'=>$arreglo[$key]['img2'],
+          'Imagen'=>$arreglo[$key]['Imagen'],
+          'ArchivoA'=>$arreglo[$key]['ArchivoA'],
+          'ArchivoB'=>$arreglo[$key]['ArchivoB'],
+          'Notas'=>$arreglo[$key]['Notas'],
+          'Notas2'=>$arreglo[$key]['Notas2'],
+        ];
+        array_push($carro, $nuevo_carro);
+      }
+    }
+    Session::put('carrito', $carro);
+    $arreglo2 =Session::get('carrito');
+    $total=0;
+    foreach ($arreglo2 as $key => $value) {
+      $total=$arreglo2[$key]['attr12']+$total;
+    }
+    return view('cart',['total'=>$total]);
+  }
 
 
   public function Findordercomplete(Request $request){
@@ -733,4 +704,3 @@ public function SetPaymentDetails(){
 }
 
 
-          

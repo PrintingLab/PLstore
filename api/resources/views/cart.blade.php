@@ -289,7 +289,7 @@ require_once "./config.php";
             </div>
             <div class="col-md-6">
               @if($carrito[$array]['attr5']!='')
-              @if(($carrito[$array]['attr1']=='3" x 4"' && $carrito[$array]['attr4']=='Matte/Dull Finish')||($carrito[$array]['attr1']=='3" x 4"' && $carrito[$array]['attr4']=='Full UV on Front Only'))
+              @if($carrito[$array]['attr1']=='3" x 4"')
               <strong>Drill Hole: </strong>{{$carrito[$array]['attr5']}}
               <br>
               @else
@@ -407,7 +407,7 @@ require_once "./config.php";
         <a href="{{route('checkout')}}">CHECKOUT</a>
       </button>
       <script type="text/javascript">
-       window.onAmazonLoginReady = function () {
+      window.onAmazonLoginReady = function () {
         try {
           amazon.Login.setClientId("<?php echo $amazonpay_config['client_id']; ?>");
         } catch (err) {
@@ -430,20 +430,20 @@ require_once "./config.php";
           }
         });
       };
-    </script>
-  </div>
-  @else
-  <div class="row">
-    <div id="AmazonLoginButton" class="btn-amazon-checkout " >
+      </script>
     </div>
-    <div class="or">
-      <strong>or</strong>
-    </div>
+    @else
+    <div class="row">
+      <div id="AmazonLoginButton" class="btn-amazon-checkout " >
+      </div>
+      <div class="or">
+        <strong>or</strong>
+      </div>
 
-    <button class="checkoutbnt ">
-      <a href="{{ route('login') }}">Checkout </a>
-    </button>
-    <script type="text/javascript">
+      <button class="checkoutbnt ">
+        <a href="{{ route('login') }}">Checkout </a>
+      </button>
+      <script type="text/javascript">
       $.ajaxSetup({
         headers: {
           'X-CSRF-Token': $('meta[name=_token]').attr('content')
@@ -556,9 +556,7 @@ require_once "./config.php";
           <input type="hidden" name="idP" id="Modal_idP" value="">
           <input type="hidden" name="idA" id="Modal_idA" value="">
           <input type="hidden" name="idE" id="Modal_idE" value="">
-
           <input type="hidden" name="notas_2" id="Modal_notas_2" value="">
-
           <div class="row">
             <div class="col-md-6">
               <span>Size: </span>
@@ -660,8 +658,10 @@ require_once "./config.php";
       <div class="modal-body">
         <form action="{{route('update-product')}}"  method="POST"  enctype="multipart/form-data">
           {{csrf_field()}}
-          <input type="hidden" name="idP" id="Modal_idP_postcards" value="">
+          <input type="hidden" name="idP" id="Modal_idP_postcards" value="10">
           <input type="hidden" name="idA" id="Modal_idA_postcards" value="">
+          <input type="hidden" name="idE" id="Modal_idE_postcards" value="">
+          <input type="hidden" name="notas_2" id="Modal_notas_postcards" value="">
           <div class="row">
             <div class="col-md-6">
               <span>Size: </span>
@@ -686,7 +686,6 @@ require_once "./config.php";
               <input class="input-update" name="printedside_postcards"  id="printedside_postcards" disabled>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6">
               <span>Coating:</span>
@@ -695,7 +694,6 @@ require_once "./config.php";
               <input class="input-update" name="coating_postcards"  id="coating_postcards" disabled>
             </div>
           </div>
-
           <div class="row" id="row_edge_postcards">
             <div class="col-md-6">
               <p>Drill Hole:</p>
@@ -917,48 +915,47 @@ require_once "./config.php";
 
 
 <script>
-  $('.elimianr_product').click(function(e){
-    e.preventDefault();
-    var id_A= $(this).attr("data-id");
-    $.confirm({
-      title: 'Delete Product',
-      content: 'Are you sure you want to remove this item from your shopping cart? This cannot be undone. ',
-      draggable: false,
-      buttons: {
-        confirm: function () {
-          $.ajaxSetup({
-            headers:{
-              'X-CSRF-Token': $('meta[name=_token]').attr('content')
+$('.elimianr_product').click(function(e){
+  e.preventDefault();
+  var id_A= $(this).attr("data-id");
+  $.confirm({
+    title: 'Delete Product',
+    content: 'Are you sure you want to remove this item from your shopping cart? This cannot be undone. ',
+    draggable: false,
+    buttons: {
+      confirm: function () {
+        $.ajaxSetup({
+          headers:{
+            'X-CSRF-Token': $('meta[name=_token]').attr('content')
+          }
+        });
+        $.ajax({
+          url:'eliminar-product',
+          data: {idA:id_A},
+          type: 'GET',
+          success: function (data){
+            if (data=="0") {
+              deleteCookie('cookie_envio')
+              deleteCookie('zip')
+              deleteCookie('tax')
+              window.location.assign('cart');
+            }else{
+              window.location.assign('cart');
             }
-          });
-          $.ajax({
-            url:'eliminar-product',
-            data: {idA:id_A},
-            type: 'GET',
-            success: function (data){
-              if (data=="0") {
-                deleteCookie('cookie_envio')
-                deleteCookie('zip')
-                deleteCookie('tax')
-                window.location.assign('cart');
-              }else{
-                window.location.assign('cart');
-              }
-            }
-          }).fail(function (){
-            alert("Sorry something were wrong, please try again.");
-          });
-        },
-        cancel: function () {
-        },
-      }
-    })
-  });
+          }
+        }).fail(function (){
+          alert("Sorry something were wrong, please try again.");
+        });
+      },
+      cancel: function () {
+      },
+    }
+  })
+});
 
-  function deleteCookie(cname) {
-    document.cookie = cname +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  }
-
+function deleteCookie(cname) {
+  document.cookie = cname +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
 
 $('.edit_producto').click(function(e){
   e.preventDefault();
@@ -1038,21 +1035,20 @@ $('.edit_producto').click(function(e){
   })
 })
 
-
-  $('.edit_details').click(function(e){
-    e.preventDefault();
-    var id_A= $(this).attr("data-id");
-    $('#Modal_idA').val('');
-    $('#Modal_idP').val('');
-    $.get("consult-update-details/"+id_A, function(result){
-      var idP =  result[0];
-      var Nota =result[1];
-      $("#edit_details").modal();
-      $('#Modal_idAT').val(id_A);
-      $('#Modal_idPT').val(idP);
-      $('#Modal_textarea').val(Nota);
-    });
+$('.edit_details').click(function(e){
+  e.preventDefault();
+  var id_A= $(this).attr("data-id");
+  $('#Modal_idA').val('');
+  $('#Modal_idP').val('');
+  $.get("consult-update-details/"+id_A, function(result){
+    var idP =  result[0];
+    var Nota =result[1];
+    $("#edit_details").modal();
+    $('#Modal_idAT').val(id_A);
+    $('#Modal_idPT').val(idP);
+    $('#Modal_textarea').val(Nota);
   });
+});
 
 function Color_change(){
   var id_product = $("#Modal_idP").val()
@@ -1087,22 +1083,32 @@ function quantity_change(){
       }
     })
     $.ajax({
-      url:'search_attr10_BC_color',
+
+
+      url:'Csearch_attr10_BC_car',
       data:{idp:id_product,atr1:at1,atr2:at2,atr3:at3,atr4:at4,atr5:at5,atr6:at6,atr10:at10},
       type:'POST',
       success: function(result){
-        $('#Modal_idE').val(result[0]['id_especificaciones'])
+        $("#printingtime").empty()
+        $('#Modal_idE').val(result[0][0]['id_especificaciones'])
         $('#total_update').empty()
         $('#labeltxt').empty()
         if (nota==='0'){
-          price = parseFloat(result[0]['atr12'])
+          price = parseFloat(result[0][0]['atr12'])
           price= (price+50.00).toFixed(2)
           $('#total_update').val(price)
           $('#labeltxt').html(price)
         }else{
-          $('#total_update').val(result[0]['atr12'])
-          $('#labeltxt').html(result[0]['atr12'])
+          $('#total_update').val(result[0][0]['atr12'])
+          $('#labeltxt').html(result[0][0]['atr12'])
         }
+        $("#printingtime").append("<option value='"+result[0][0]['attr11']+"'>"+result[0][0]['attr11']+"</option>")
+        for(i=0; i<result[1].length; i++){
+          if (result[1][i].attr11!==result[0][0]['attr11'] ){
+            $("#printingtime").append("<option value='"+result[1][i].attr11+"'>"+result[1][i].attr11+"</option>")
+          }
+        };
+
       }
     })
   }else{
@@ -1204,86 +1210,63 @@ function printingtime_change(){
   }
 }
 
-
-
-
-
-
-
-
 //postcards
 $('.edit_producto_postcards').click(function(e){
   e.preventDefault();
   var id_A= $(this).attr("data-id");
-  $('#Modal_idA_postcards').val('');
-  $('#Modal_idP_postcards').val('');
-  $('#size_postcards').val('');
-  $('#stock_postcards').val('');
-  $('#printedside_postcards').val('');
-  $('#coating_postcards').val('');
-  $('#drill_holle').val('');
-  $('#corners_postcards').val('');
-  $("#quantity_postcards").empty();
-  $("#printingtime_postcards").empty();
-  $('#total_update_postcards').empty();
-  $('#labeltxt_postcards').empty();
+  $("#row_edge_postcards").css('display','none')
+  $("#row_edge_postcards2").css('display','none')
+  $('#Modal_idA_postcards').val('')
+  $('#Modal_idP_postcards').val('')
+  $("#Modal_idE_postcards").val('')
+  $("#Modal_notas_postcards").val('')
+  $('#size_postcards').val('')
+  $('#stock_postcards').val('')
+  $('#printedside_postcards').val('')
+  $('#coating_postcards').val('')
+  $('#drill_holle').val('')
+  $('#corners_postcards').val('')
+  $("#quantity_postcards").empty()
+  $("#printingtime_postcards").empty()
+  $('#total_update_postcards').empty()
+  $('#labeltxt_postcards').empty()
   $.get("consult-update-product/"+id_A, function(result){
-    var idP =  result[0];
-    var attr1 =result[1];
-    var attr2 =result[2];
-    var attr3 =result[3];
-    var attr4 =result[4];
-    var attr5 =result[5];
-    $("#miModal_Postcards").modal();
-    if (result[6]==1) {
-      //tiene drill
-      $('#row_edge_postcards').css('display','flex');
-      $('#row_edge_postcards2').css('display','none');
-      $('#Modal_idA_postcards').val(id_A);
-      $('#Modal_idP_postcards').val(idP);
-      $('#size_postcards').val(attr1);
-      $('#stock_postcards').val(attr2);
-      $('#printedside_postcards').val(attr3);
-      $('#coating_postcards').val(attr4);
-      $('#drill_holle').val(attr5);
-      $("#quantity_postcards").append("<option>Select</option>");
-      for(i=0; i<result[8].length; i++){
-        $("#quantity_postcards").append("<option value='"+result[8][i].attr10+"'>"+result[8][i].attr10+"</option>");
-      };
-    }else if (result[6]==2) {
-      //tiene Corness
-      $('#row_edge_postcards').css('display','none');
-      $('#row_edge_postcards2').css('display','flex');
-      $('#Modal_idA_postcards').val(id_A);
-      $('#Modal_idP_postcards').val(idP);
-      $('#size_postcards').val(attr1);
-      $('#stock_postcards').val(attr2);
-      $('#printedside_postcards').val(attr3);
-      $('#coating_postcards').val(attr4);
-      $('#corners_postcards').val(attr5);
-      $("#quantity_postcards").append("<option>Select</option>");
-      for(i=0; i<result[8].length; i++){
-        $("#quantity_postcards").append("<option value='"+result[8][i].attr10+"'>"+result[8][i].attr10+"</option>");
-      };
-    }else {
-      $('#row_edge_postcards').css('display','none');
-      $('#row_edge_postcards2').css('display','none');
-      $('#Modal_idA_postcards').val(id_A);
-      $('#Modal_idP_postcards').val(idP);
-      $('#size_postcards').val(attr1);
-      $('#stock_postcards').val(attr2);
-      $('#printedside_postcards').val(attr3);
-      $('#coating_postcards').val(attr4);
-      $("#quantity_postcards").append("<option>Select</option>");
-      for(i=0; i<result[8].length; i++){
-        $("#quantity_postcards").append("<option value='"+result[8][i].attr10+"'>"+result[8][i].attr10+"</option>");
-      };
+    $("#miModal_Postcards").modal()
+    $('#Modal_idP_postcards').val(10)
+    $('#Modal_idA_postcards').val(id_A)
+    $('#Modal_idE_postcards').val(result[1])
+    $('#size_postcards').val(result[2])
+    $('#stock_postcards').val(result[3])
+    $('#printedside_postcards').val(result[4])
+    $('#coating_postcards').val(result[5])
+    if (result[6]!="") {
+      if (result[2]=='3" x 4"') {
+        $("#row_edge_postcards").css('display','flex')
+        $('#drill_holle').val(result[6])
+      }else{
+        $("#row_edge_postcards2").css('display','flex')
+        $('#corners_postcards').val(result[6])
+      }
     }
-  });
-});
+    $("#quantity_postcards").append("<option value='"+result[7]+"'>"+result[7]+"</option>")
+    for(i=0; i<result[10].length; i++){
+      if (result[10][i].attr10!==result[7] ){
+        $("#quantity_postcards").append("<option value='"+result[10][i].attr10+"'>"+result[10][i].attr10+"</option>")
+      }
+    };
+    $("#printingtime_postcards").append("<option value='"+result[8]+"'>"+result[8]+"</option>")
+    for(i=0; i<result[11].length; i++){
+      if (result[11][i].attr11!==result[8] ){
+        $("#printingtime_postcards").append("<option value='"+result[11][i].attr11+"'>"+result[11][i].attr11+"</option>")
+      }
+    };
+    $('#total_update_postcards').val(parseFloat(result[9]).toFixed(2));
+    $('#labeltxt_postcards').html(parseFloat(result[9]).toFixed(2));
+    $('#Modal_notas_postcards').val(result[12])
+  })
+})
 
 function quantity_change_postcards(){
-  var id_product =  $('#Modal_idP_postcards').val();
   var attr1=  $('#size_postcards').val();
   var attr2=  $('#stock_postcards').val();
   var attr3=  $('#printedside_postcards').val();
@@ -1291,102 +1274,147 @@ function quantity_change_postcards(){
   var attr10=  $("#quantity_postcards").val();
   var attr51=  $('#drill_holle').val();
   var attr52=  $('#corners_postcards').val();
-  if ( (attr51==="" || attr51==null) && (attr52==="" || attr52==null)){
+  var nota =$("#Modal_notas_postcards").val()
+  if ((attr51==="" || attr51==null) && (attr52==="" || attr52==null)) {
     $.ajaxSetup({
       headers:{
         'X-CSRF-Token': $('meta[name=_token]').attr('content')
       }
-    });
+
+    })
     $.ajax({
-      url:'postcardsattr11',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10,},
+      url:'search_attr11_postcar',
+      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10},
       type:'POST',
       success: function(result){
-        $("#printingtime_postcards").empty();
-        $('#total_update_postcards').val('');
-        $('#labeltxt_postcards').empty();
-        $("#printingtime_postcards").append("<option>Select</option>");
-        for(i=0; i<result.length; i++){
-          $("#printingtime_postcards").append("<option value='"+result[i].attr11+"'>"+result[i].attr11+"</option>");
+        $('#total_update_postcards').empty()
+        $('#labeltxt_postcards').empty()
+        $("#printingtime_postcards").empty()
+        $('#Modal_idE_postcards').val(result[0][0]['id_especificaciones'])
+        if (nota==='0') {
+          price = parseFloat(result[0][0]['atr12'])
+          price= (price+50.00).toFixed(2)
+          $('#total_update_postcards').val(price)
+          $('#labeltxt_postcards').html(price)
+        }else{
+          $('#total_update_postcards').val(result[0][0]['atr12'])
+          $('#labeltxt_postcards').html(result[0][0]['atr12'])
+        }
+        $("#printingtime_postcards").append("<option value='"+result[0][0]['attr11']+"'>"+result[0][0]['attr11']+"</option>")
+        for(i=0; i<result[1].length; i++){
+          if (result[1][i].attr11!==result[0][0]['attr11'] ){
+            $("#printingtime_postcards").append("<option value='"+result[1][i].attr11+"'>"+result[1][i].attr11+"</option>")
+          }
         };
       }
-    });
+    })
   }else{
-    if (attr51==="" || attr51==null) {
-      var attr5=$("#corners_postcards").val();
-    }else {
-      var attr5=$("#drill_holle").val();
+    if (attr51!=='') {
+      var attr5=attr51
+    }else{
+      var attr5=attr52
     }
     $.ajaxSetup({
       headers:{
         'X-CSRF-Token': $('meta[name=_token]').attr('content')
       }
-    });
+    })
     $.ajax({
-      url:'postcardsattr11_drill',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10,},
+      url:'search_attr11_5postcar',
+      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10},
       type:'POST',
       success: function(result){
-        $("#printingtime_postcards").empty();
-        $('#total_update_postcards').val('');
-        $('#labeltxt_postcards').empty();
-
-        $("#printingtime_postcards").append("<option>Select</option>");
-        for(i=0; i<result.length; i++){
-          $("#printingtime_postcards").append("<option value='"+result[i].attr11+"'>"+result[i].attr11+"</option>");
+        $('#total_update_postcards').empty()
+        $('#labeltxt_postcards').empty()
+        $("#printingtime_postcards").empty()
+        $('#Modal_idE_postcards').val(result[0][0]['id_especificaciones'])
+        if (nota==='0') {
+          price = parseFloat(result[0][0]['atr12'])
+          price= (price+50.00).toFixed(2)
+          $('#total_update_postcards').val(price)
+          $('#labeltxt_postcards').html(price)
+        }else{
+          $('#total_update_postcards').val(result[0][0]['atr12'])
+          $('#labeltxt_postcards').html(result[0][0]['atr12'])
         }
+        $("#printingtime_postcards").append("<option value='"+result[0][0]['attr11']+"'>"+result[0][0]['attr11']+"</option>")
+        for(i=0; i<result[1].length; i++){
+          if (result[1][i].attr11!==result[0][0]['attr11'] ){
+            $("#printingtime_postcards").append("<option value='"+result[1][i].attr11+"'>"+result[1][i].attr11+"</option>")
+          }
+        };
       }
     })
   }
 }
 
 function printingtime_change_postcards(){
-  var id_product =  $('#Modal_idP_postcards').val();
-  var attr1=  $('#size_postcards').val();
-  var attr2=  $('#stock_postcards').val();
-  var attr3=  $('#printedside_postcards').val();
-  var attr4=  $('#coating_postcards').val();
-  var attr5=  $('#drill_holle').val();
-  var attr10=  $("#quantity_postcards").val();
-  var attr11=  $("#printingtime_postcards").val();
-  if (attr5===""||attr5==null){
+  var attr1=  $('#size_postcards').val()
+  var attr2=  $('#stock_postcards').val()
+  var attr3=  $('#printedside_postcards').val()
+  var attr4=  $('#coating_postcards').val()
+  var attr51=  $('#drill_holle').val()
+  var attr52=  $('#corners_postcards').val()
+  var attr10=  $("#quantity_postcards").val()
+  var attr11=  $("#printingtime_postcards").val()
+  var nota =$("#Modal_notas_postcards").val()
+  if ((attr51==="" || attr51==null) && (attr52==="" || attr52==null)) {
     $.ajaxSetup({
       headers:{
         'X-CSRF-Token': $('meta[name=_token]').attr('content')
       }
-    });
+    })
     $.ajax({
-      url:'postcardsattr12',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10,atr11:attr11,},
+      url:'postcardsattr11',
+      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10,atr11:attr11},
       type:'POST',
       success: function(result){
-        var attr12= result[0].attr12;
-        var id_especificaciones=result[0].id_especificaciones;
-        $('#total_update_postcards').val(attr12);
-        $('#labeltxt_postcards').html(attr12);
+        $('#total_update_postcards').empty()
+        $('#labeltxt_postcards').empty()
+        $('#Modal_idE_postcards').val(result[0]['id_especificaciones'])
+        if (nota==='0') {
+          price = parseFloat(result[0]['atr12'])
+          price= (price+50.00).toFixed(2)
+          $('#total_update_postcards').val(price)
+          $('#labeltxt_postcards').html(price)
+        }else{
+          $('#total_update_postcards').val(result[0]['attr12'])
+          $('#labeltxt_postcards').html(result[0]['attr12'])
+        }
       }
     })
   }else{
+    if (attr51!=='') {
+      var attr5=attr51
+    }else{
+      var attr5=attr52
+    }
     $.ajaxSetup({
       headers:{
         'X-CSRF-Token': $('meta[name=_token]').attr('content')
       }
-    });
+    })
     $.ajax({
-      url:'postcardsattr12_drill',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10,atr11:attr11,},
+      url:'postcardsattr11_5',
+      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10,atr11:attr11},
       type:'POST',
       success: function(result){
-        var attr12= result[0].attr12;
-        var id_especificaciones=result[0].id_especificaciones;
-        $('#total_update_postcards').val(attr12);
-        $('#labeltxt_postcards').html(attr12);
+        $('#total_update_postcards').empty()
+        $('#labeltxt_postcards').empty()
+        $('#Modal_idE_postcards').val(result[0]['id_especificaciones'])
+        if (nota==='0') {
+          price = parseFloat(result[0]['attr12'])
+          price= (price+50.00).toFixed(2)
+          $('#total_update_postcards').val(price)
+          $('#labeltxt_postcards').html(price)
+        }else{
+          $('#total_update_postcards').val(result[0]['attr12'])
+          $('#labeltxt_postcards').html(result[0]['attr12'])
+        }
+
       }
-    });
-
+    })
   }
-
-
 }
 
 // script ops shiping

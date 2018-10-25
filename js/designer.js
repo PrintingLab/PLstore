@@ -330,7 +330,6 @@ designerapp.controller('designercontroller',function($scope,$http){
 		}
 
 	}
-	
 	$scope.addImg = function(i,file) {
 		var url = i+file
 		console.log(url)

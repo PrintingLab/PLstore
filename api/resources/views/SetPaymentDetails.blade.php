@@ -246,8 +246,11 @@ require_once "./config.php";
 	<input hidden  type="text" name="paytype"  value="AmazonPay" id="paytype">
 	<input hidden  type="text" name="cltname"  value="{{Auth::user()->name}}" id="cltname">
 	<input hidden  type="mail" name="cltmail"  value="{{Auth::user()->email}}" id="cltmail">
+<<<<<<< HEAD
 	<input hidden type="text" name="cltadress"   id="cltadress">
 	<input hidden type="text" name="cltphone"   id="cltphone">
+=======
+>>>>>>> hernando
 </form>
 <link rel="stylesheet" href="{!! asset('css/paystep.css') !!}"></link>
 

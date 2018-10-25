@@ -186,6 +186,7 @@
           <li><a href="{{ url('privacy-policy')}}">Privacy Policy</a> </li>
           <li><a href="{{url('terms-and-conditions') }}">Terms & Conditions</a></li>
           <li></li>
+
         </div>
         <div class="col-md-4 col-sm-6 col-6 ">
           <H5>LOCATIONS</H5>
@@ -228,6 +229,7 @@
             </div>
           </form>
         </div>
+        <p>Don't worry we don't spam</p>
       </div>
     </div>
     <div class="col-md-12   col-sm-12 col-xs-12 ccpl">
