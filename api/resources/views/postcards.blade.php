@@ -28,7 +28,7 @@ PostCards - Printing Lab
       </div>
       @endforeach
     </div>
-    <div class="col-md-4 select-businnes-cards">
+    <div class="col-md-5 select-businnes-cards">
       @foreach ($producto as $dato )
       <div class="product_name">
         <h3> <strong>{{ $dato->nombre}}</strong>  </h3>

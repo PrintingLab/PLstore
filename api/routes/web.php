@@ -139,6 +139,12 @@ Route::get('download-template-postcards','DownloadTemplateController@DownloadPos
 Route::post('search_attr11_postcar','PostCardsController@quantity_car');
 Route::post('search_attr11_5postcar','PostCardsController@quantity_car5');
 
+
+Route::get('calendars','CalendarsController@home');
+
+Route::post('coupones','CouponesController@consult');
+
+
 //registro y login laravel
 //la primera es la que podemos quitar y se reemplazan por la de abajo
 Auth::routes();

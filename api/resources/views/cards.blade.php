@@ -18,7 +18,7 @@ Marketing Products - Printing Lab
         <li><a href="business-cards6"><span>Oval Business Cards</span></a> </li>
       </ul>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-9 cards_list">
       <div class="row">
         <div class="col-md-4 col-xs-6 divs_MP_products" >
           <a  href="business-cards1">
