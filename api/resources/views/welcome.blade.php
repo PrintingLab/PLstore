@@ -3,6 +3,8 @@
 Printing Lab: Signage, Vehicle Graphics, Large Format, Trade Shows, Custom Apparel, Marketing Products - New Jersey
 @endsection
 @section('content')
+
+<!--
 <div  id="carouselExampleIndicatorsM" class="carousel slide mobile" data-ride="carousel">
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicatorsM" data-slide-to="0" class="active"></li>
@@ -38,7 +40,10 @@ Printing Lab: Signage, Vehicle Graphics, Large Format, Trade Shows, Custom Appar
       <img src="images/slider-index-printing-lab-3.jpg">
     </div>
   </div>
-</div>
+</div> -->
+
+<iframe  width="100%" height="655" src="https://www.youtube.com/embed/f6AEXjVdHSY?playlist=f6AEXjVdHSY&iv_load_policy=3&enablejsapi=1&disablekb=1&autoplay=1&controls=0&showinfo=0&rel=0&loop=1&wmode=transparent&origin=http%3A%2F%2Fsignslab.com&widgetid=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 <div class="col-md-12 box">
   <h2>SERVICES</h2>
 </div>
@@ -304,4 +309,5 @@ Printing Lab: Signage, Vehicle Graphics, Large Format, Trade Shows, Custom Appar
 <div >
   <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12083.4339750499!2d-74.0230317!3d40.787125!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x28b4aba3ce92a1b4!2sPrinting+Lab!5e0!3m2!1ses!2sco!4v1520367673415" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 </div>
+
 @endsection
