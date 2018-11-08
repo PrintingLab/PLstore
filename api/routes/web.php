@@ -185,3 +185,6 @@ Route::middleware(['auth'])->group(function(){
 	Route::get('details','SaleController@details')->name('sales.details')->middleware('permission:sales.details');
 	Route::get('download','SaleController@download')->name('sales.download')->middleware('permission:sales.download');
 });
+
+Route::get('/work-with-us','WorkWithUsController@home');
+Route::post('WorkEmail','WorkWithUsController@EnviarCorreo')->name('WorkEmail');

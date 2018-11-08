@@ -51,12 +51,15 @@
 </script>
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/251b2e0553860ed938039c6f1/a47710029600f4f8a8e33cf0f.js");</script>
 </head>
-<div class="col-md-12" style="z-index: 1021;">
+
+<div class="toptop">
+<div class="col-md-12" >
   <div class="row justify-content-end">
-    <div class="col-md-5">
+    <div class="col-md-5  m5">
       @if (Route::has('login'))
       @auth
       <ul class="ul-count justify-content-end">
+        <a href="tel:201-305-0404"><li class="callus"><b>CALL US:&nbsp</b> 201-305-0404 </li></a>
         <li class="li-top dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="images/user.svg" alt="">Hi, {{Auth::user()->name}}!</a>
           <ul class="dropdown-menu">
@@ -86,6 +89,7 @@
     </ul>
     @else
     <ul class="ul-count justify-content-end">
+      <a href="tel:201-305-0404"><li class="callus"><b>CALL US:&nbsp</b> 201-305-0404 </li></a>
       <li class="li-top dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><img src="images/user.svg" alt="">Hi, Log In!</a>
         <ul class="dropdown-menu">
@@ -158,6 +162,8 @@
     </ul>
   </div>
 </nav>
+</div>
+
 <body ng-app="designer-v1" >
   <div class="flex-center position-ref full-height">
     <div class="content">
@@ -174,6 +180,7 @@
           <strong><h5>COMPANY</h5></strong>
           <li><a href="{{ url('/about-us') }}">About Us</a></li>
           <li><a href="contact-us">Contact Us</a> </li>
+          <li><a href="work-with-us">Work With Us</a> </li>
           <li class="social-menu-footer">
             <a href="https://www.facebook.com/PrintingLab" target="_blank"><i class="fab fa-facebook fa-lg"></i></a>
             <a href="https://www.instagram.com/printinglab/" target="_blank"><i class="fab fa-instagram fa-lg"></i></a>

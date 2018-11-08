@@ -74,7 +74,7 @@ Marketing Products - Printing Lab
         </div>
         <div class="col-md-4 col-xs-6 divs_MP_products">
           <a  href="business-cards6">
-            <img src="images/marketing/cards/oval-business-card-2x3.5-printing-lab-new-york-1.jpg">
+            <img src="images/marketing/cards/oval-business-cards-printing-lab-new-jersey.jpg">
           </a>
           <div class="tittle-products-BC">
             <a href="business-cards6">
