@@ -16,8 +16,17 @@ class DesignerController extends Controller{
     $directory = 'img/icons/svg';
     $scanned_directory = array_diff(scandir($directory), array('..', '.'));
     $sb = substr($request->_size,strpos($request->_size, 'x '),strlen($request->_size));
-    $width = substr($sb,2,strlen($sb)-3);
-    $height=substr($request->_size.'"', 0, strpos($request->_size, '"'));
+    $orientation = $request->val_orientation;
+    if ($orientation==1) {
+      $orientationtext = 'H';
+      $width = substr($sb,2,strlen($sb)-3);
+      $height=substr($request->_size.'"', 0, strpos($request->_size, '"'));
+    }else{
+      $orientationtext = 'V';
+      $height = substr($sb,2,strlen($sb)-3);
+      $width=substr($request->_size.'"', 0, strpos($request->_size, '"'));
+    }
+    
     switch ($request->P_name) {
       case 'Postcards':
       if ($height < 5) {
@@ -69,7 +78,7 @@ class DesignerController extends Controller{
   $imgs = DB::table('images')->where('type', 1)->get();
   $user_imgs = DB::table('images')->where('type', 2)->get();
     //dd($scanned_directory);
-  return view('tool')->with(['class'=>$request->id_P,'cut'=>$request->id_P,'nombre'=>$request->P_name,'cara'=>$request->_sides,'spec'=>$request->_idspc,'idC'=>$request->_idC,'width'=>$pixelW,'corner'=>str_replace(' ', '', $request->_Corners),'height'=>$pixelh,'imgs'=>$imgs,'user_imgs'=>$user_imgs,'icons'=> $scanned_directory]);
+  return view('tool')->with(['class'=>$request->id_P,'cut'=>$request->id_P,'nombre'=>$request->P_name,'cara'=>$request->_sides,'spec'=>$request->_idspc,'idC'=>$request->_idC,'width'=>$pixelW,'corner'=>str_replace(' ', '', $request->_Corners),'height'=>$pixelh,'imgs'=>$imgs,'user_imgs'=>$user_imgs,'icons'=> $scanned_directory,'Orientation'=>$orientationtext,'textsize'=>$request->_size]);
 }
 
 public function callicons(Request $request){
@@ -144,7 +153,7 @@ public function BDtemplates(Request $request){
   $imagenB = $namecut.$filename.'_B';
   if ($request->action==1){
    $success = DB::table('templates')->insertGetId(
-     array('type' =>$request->id,'name' =>$request->name, 'cv' =>$request->cv,'cv2' =>$request->cv2,'img' =>$imagenA, 'img2' =>$imagenB)
+     array('type' =>$request->id,'name' =>$request->name, 'cv' =>$request->cv,'cv2' =>$request->cv2,'img' =>$imagenA, 'img2' =>$imagenB, 'size' =>$request->textsize,'orientation'=>$request->orientation)
    );
    if ($success) {
      $sideA = str_replace('data:image/png;base64,', '', $request->img);
@@ -161,7 +170,7 @@ public function BDtemplates(Request $request){
    return response()->json(['success'=>$success]);
  }
  if ($request->action==2) {
-  $success =  DB::table('templates')->select('id','name', 'type', 'img', 'img2')->get();
+  $success =  DB::table('templates')->select('id','name', 'type', 'img', 'img2','size','orientation')->where('type', $request->filter)->where('size',$request->SizeFilter)->where('orientation',$request->OrientationFilter)->get();
   return response()->json(['success'=>$success]);
 }
 if ($request->action==4) {

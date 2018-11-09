@@ -347,7 +347,13 @@ $scope.UPSShipping = function(zipval,shp) {
                $('#errordiv').text(data.success.Result+':  '+data.success.Errormessage)
              }
              if (data.success.ResultCode =="Ok") {
+               if (data.success.Result =="Transaction Failed") {
+               $('#errordiv').show()
+               $('#errordiv').text(data.success.Result+':  '+data.success.Errormessage)
+             }else{
               $('#p3').trigger('click');
+             }
+              
             }
             console.log(data.success)
             TransId = data.success.getTransId

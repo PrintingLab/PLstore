@@ -219,7 +219,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 
 			$scope.btnchangeside=true			
 			$scope.backgroundselectedcolor=canvas.backgroundColor
-			
+			$scope.popquicklayer=false
 		}else{
 			$scope.front=false
 			$scope.back=true
@@ -227,7 +227,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 
 			$scope.btnchangeside=false	
 			$scope.backgroundselectedcolor=canvasback.backgroundColor
-
+			$scope.popquicklayer=false
 
 		}
 	}
@@ -258,10 +258,12 @@ designerapp.controller('designercontroller',function($scope,$http){
 					clonedObj.canvas = canvas;
 					clonedObj.forEachObject(function(obj) {
 						canvas.add(obj)
+						$scope.reloadquicklayers()
 					});
 					clonedObj.setCoords()
 				} else {
 					canvas.add(clonedObj)
+					$scope.reloadquicklayers()
 				}
 				_clipboard.top += 10;
 				_clipboard.left += 10;
@@ -280,10 +282,12 @@ designerapp.controller('designercontroller',function($scope,$http){
 					clonedObj.canvasback = canvasback;
 					clonedObj.forEachObject(function(obj) {
 						canvasback.add(obj);
+						$scope.reloadquicklayers()
 					});
 					clonedObj.setCoords();
 				} else {
 					canvasback.add(clonedObj);
+					$scope.reloadquicklayers()
 				}
 				_clipboard.top += 10;
 				_clipboard.left += 10;
@@ -309,6 +313,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				loadedObjects.scaleToWidth(25);
 				loadedObjects.scaleToHeight(25);
 				canvas.add(loadedObjects);
+				$scope.reloadquicklayers()
 				canvas.renderAll();
 
 			});
@@ -324,6 +329,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				loadedObjects.scaleToWidth(25);
 				loadedObjects.scaleToHeight(25);
 				canvasback.add(loadedObjects);
+				$scope.reloadquicklayers()
 				canvasback.renderAll();
 
 			});
@@ -345,6 +351,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				oImg.set('cornerSize', 6);
 				oImg.set('transparentCorners', false);
 				canvas.add(oImg);  
+				$scope.reloadquicklayers()
 
 			});
 		}else{
@@ -358,6 +365,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				oImg.set('cornerSize', 6);
 				oImg.set('transparentCorners', false);
 				canvasback.add(oImg);  
+				$scope.reloadquicklayers()
 
 			});
 		}
@@ -381,6 +389,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				
 			});
 			canvas.add(square);
+			$scope.reloadquicklayers()
 		}else{
 			square = new fabric.Rect({
 				width: 180,
@@ -396,6 +405,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				transparentCorners: false
 			});
 			canvasback.add(square);
+			$scope.reloadquicklayers()
 		}
 	}
 
@@ -415,6 +425,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 
 			});
 			canvas.add(circle);
+			$scope.reloadquicklayers()
 		}else{
 			circle = new fabric.Circle({
 				radius: 90,
@@ -429,6 +440,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				transparentCorners: false
 			});
 			canvasback.add(circle);
+			$scope.reloadquicklayers()
 		}
 
 	}
@@ -449,6 +461,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				transparentCorners: false
 			});
 			canvas.add(triangle);
+			$scope.reloadquicklayers()
 		}else{
 			triangle = new fabric.Triangle({
 				width: 180,
@@ -464,6 +477,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				transparentCorners: false
 			});
 			canvasback.add(triangle);
+			$scope.reloadquicklayers()
 		}
 	}
 
@@ -484,6 +498,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				mt: true, mb: true, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true,
 			});
 			canvas.add(Hline);
+			$scope.reloadquicklayers()
 		}else{
 			Hline = new fabric.Line([50, 50, 200, 50], { 
 				left: (canvasback.width/2) - (200 * 1/2),
@@ -500,6 +515,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				mt: true, mb: true, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true,
 			});
 			canvasback.add(Hline);
+			$scope.reloadquicklayers()
 		}
 	}
 
@@ -520,6 +536,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				mt: true, mb: true, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true,
 			});
 			canvas.add(Vline);
+			$scope.reloadquicklayers()
 		}else{
 			Vline = new fabric.Line([50, 50,50, 200],{
 				left: (canvasback.width/2) - (2 * 1/2),
@@ -536,6 +553,7 @@ designerapp.controller('designercontroller',function($scope,$http){
 				mt: true, mb: true, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true,
 			});
 			canvasback.add(Vline);
+			$scope.reloadquicklayers()
 		}
 	}
 	function rgb2hex(rgb){
@@ -560,13 +578,19 @@ designerapp.controller('designercontroller',function($scope,$http){
 	}
 	$scope.delete = function() {
 		if ($scope.cvside) {
-			canvas.remove(canvas.getActiveObject());
+			var activeObject = canvas.getActiveObjects();
+			canvas.discardActiveObject();
+			canvas.remove(...activeObject);
 			$('#shapeoption').hide()
 			$('#Entertext').hide()
+			$scope.reloadquicklayers()
 		}else{
-			canvasback.remove(canvasback.getActiveObject());
+			var activeObject = canvasback.getActiveObjects();
+			canvasback.discardActiveObject();
+			canvasback.remove(...activeObject);
 			$('#shapeoption').hide()
 			$('#Entertext').hide()
+			$scope.reloadquicklayers()
 
 		}
 
@@ -759,7 +783,7 @@ designerapp.controller('designercontroller',function($scope,$http){
             cache: false, // To unable request pages to be cached
             processData: false,
             success: function(data) { 
-            console.log(data)      
+            	console.log(data)      
             	//$("#pageload").show();
             	//$("#preloader").show();
             	$('#side1').val(data.ladoA)
@@ -808,34 +832,170 @@ designerapp.controller('designercontroller',function($scope,$http){
 		}	
 	}
 
+	$scope.lockactivelayer = function(act,a) {
+		if ($scope.cvside) {
+			for (var i = canvas.getObjects().length- 1; i >= 0; i--) {
+				if (canvas.item(i).id == act ) { 
+					if (a=='1') {
+						if (canvas.item(i).selectable) {
+							canvas.item(i).set({ hasControls: false, hasBorders: false, selectable: false });
+							canvas.discardActiveObject()
+							canvas.renderAll();
+							$scope[act] = canvas.item(i).selectable
+						}else{
+							canvas.item(i).set({ hasControls: true, hasBorders: true, selectable: true });
+							canvas.discardActiveObject()
+							canvas.renderAll();
+							$scope[act] = canvas.item(i).selectable
+						}
+					}else{ 
+						if (canvas.item(i).visible) {
+							canvas.item(i).set({ visible: false});
+							canvas.renderAll();
+							$scope[act+'2'] = canvas.item(i).visible
+						}else{
+							canvas.item(i).set({ visible: true });
+							canvas.renderAll();
+							$scope[act+'2'] = canvas.item(i).visible
+						}
+					}
+
+				}	
+			}	
+		}else{
+			for (var i = canvasback.getObjects().length- 1; i >= 0; i--) {
+				if (canvasback.item(i).id == act ) { 
+					if (a=='1') {
+						if (canvasback.item(i).selectable) {
+							canvasback.item(i).set({ hasControls: false, hasBorders: false, selectable: false });
+							canvasback.discardActiveObject()
+							canvasback.renderAll();
+							$scope[act] = canvasback.item(i).selectable
+						}else{
+							canvasback.item(i).set({ hasControls: true, hasBorders: true, selectable: true });
+							canvasback.discardActiveObject()
+							canvasback.renderAll();
+							$scope[act] = canvasback.item(i).selectable
+						}
+					}else{ 
+						if (canvasback.item(i).visible) {
+							canvasback.item(i).set({ visible: false});
+							canvasback.renderAll();
+							$scope[act+'2'] = canvasback.item(i).visible
+						}else{
+							canvasback.item(i).set({ visible: true });
+							canvasback.renderAll();
+							$scope[act+'2'] = canvasback.item(i).visible
+						}
+					}
+
+				}	
+			}	
+
+		}
+	}
+
 
 	$scope.setactivelayer = function(act) {
-	//alert(act)
-	if ($scope.cvside) {
-		for (var i = canvas.getObjects().length- 1; i >= 0; i--) {
-			if (canvas.item(i).id == act ) { 
-				canvas.setActiveObject(canvas.item(i));
+		if ($scope.cvside) {
+			$('#quicklayer div').removeClass('quicklayerselec')
+			$('#'+act+'').addClass('quicklayerselec')
+			$('#'+act+'').focus()
+			for (var i = canvas.getObjects().length- 1; i >= 0; i--) {
+				if (canvas.item(i).id == act ) { 
+					canvas.setActiveObject(canvas.item(i));
+					canvas.item(i).hasControls = true;
+					canvas.item(i).set('cornerColor', '#ff46b4');
+					canvas.item(i).set('borderColor', '#ff46b4');
+					canvas.item(i).set('cornerSize', 6);
+					canvas.item(i).set('transparentCorners', false);
+					canvas.renderAll();
+					console.log(canvas.item(i).selectable)
+				}	
+			}
+		}else{
+			$('#quicklayer div').removeClass('quicklayerselec')
+			$('#'+act+'').addClass('quicklayerselec')
+			$('#'+act+'').focus()
+			for (var i = canvasback.getObjects().length- 1; i >= 0; i--) {
+				if (canvasback.item(i).id == act ) { 
+					canvasback.setActiveObject(canvasback.item(i));
+					canvas.item(i).hasControls = true;
+					canvas.item(i).set('cornerColor', '#ff46b4');
+					canvas.item(i).set('borderColor', '#ff46b4');
+					canvas.item(i).set('cornerSize', 6);
+					canvas.item(i).set('transparentCorners', false);
+					canvasback.renderAll();
+					console.log(canvasback.item(i).selectable)
+				}	
+			}
+		}
+	}
+	$scope.reloadquicklayers = function() {
+		if ($scope.cvside) {
+			$scope.quicklayersarray=[]
+			$scope.quickinputarray=[]
+			for (var i = canvas.getObjects().length- 1; i >= 0; i--) {
+				canvas.item(i).set("id", 'ly'+i);
+				var act ='ly'+i
+				$scope[act] = canvas.item(i).selectable
+				$scope[act+'2'] = canvas.item(i).visible
+				if (canvas.item(i).type=="image") {
+					$scope.quicklayersarray.push({id:'ly'+i,name:canvas.item(i).type,img:canvas.item(i).src})
+				}else{
+					$scope.quicklayersarray.push({id:'ly'+i,name:canvas.item(i).type,img:canvas.item(i).toDataURL("image/png")})
+				}
+
+				console.log($scope.quicklayersarray)
 				canvas.renderAll();
-			}	
+			//$('.quickinput').append("<input type='' value='"+canvas.item(i).text+"' name='"+canvas.item(i).text+"' placeholder='"+canvas.item(i).text+"'><br>");
 		}
 	}else{
+		$scope.quicklayersarray=[]
+		$scope.quickinputarray=[]
 		for (var i = canvasback.getObjects().length- 1; i >= 0; i--) {
-			if (canvasback.item(i).id == act ) { 
-				canvasback.setActiveObject(canvasback.item(i));
-				canvasback.renderAll();
-			}	
+			canvasback.item(i).set("id", 'ly'+i);
+			var act ='ly'+i
+			$scope[act] = canvasback.item(i).selectable
+			$scope[act+'2'] = canvasback.item(i).visible
+			if (canvasback.item(i).type=="image") {
+				$scope.quicklayersarray.push({id:'ly'+i,name:canvasback.item(i).type,img:canvasback.item(i).src})
+			}else{
+				$scope.quicklayersarray.push({id:'ly'+i,name:canvasback.item(i).type,img:canvasback.item(i).toDataURL("image/png")})
+			}
+			console.log($scope.quicklayersarray)
+			canvasback.renderAll();
+			//$('.quickinput').append("<input type='' value='"+canvas.item(i).text+"' name='"+canvas.item(i).text+"' placeholder='"+canvas.item(i).text+"'><br>");
 		}
 	}
 }
 
 
+
+
 $scope.quicklayers = function() {
+	if ($scope.popquicklayer) {
+		$scope.btnlayersbackground='#fff'
+		$scope.btnlayerscolor='#000'
+		$scope.popquicklayer=false
+	}else{
+		$scope.popquicklayer=true
+		$scope.btnlayersbackground='#000'
+		$scope.btnlayerscolor='#fff'
+	}
 	if ($scope.cvside) {
 		$scope.quicklayersarray=[]
 		$scope.quickinputarray=[]
 		for (var i = canvas.getObjects().length- 1; i >= 0; i--) {
 			canvas.item(i).set("id", 'ly'+i);
-			$scope.quicklayersarray.push({id:'ly'+i,name:canvas.item(i).type})
+			var act ='ly'+i
+			$scope[act] = canvas.item(i).selectable
+			$scope[act+'2'] = canvas.item(i).visible
+			if (canvas.item(i).type=="image") {
+				$scope.quicklayersarray.push({id:'ly'+i,name:canvas.item(i).type,img:canvas.item(i).src})
+			}else{
+				$scope.quicklayersarray.push({id:'ly'+i,name:canvas.item(i).type,img:canvas.item(i).toDataURL("image/png")})
+			}
 			console.log($scope.quicklayersarray)
 			canvas.renderAll();
 			//$('.quickinput').append("<input type='' value='"+canvas.item(i).text+"' name='"+canvas.item(i).text+"' placeholder='"+canvas.item(i).text+"'><br>");
@@ -843,9 +1003,16 @@ $scope.quicklayers = function() {
 	}else{
 		$scope.quicklayersarray=[]
 		$scope.quickinputarray=[]
-		for (var i = canvasback.getObjects().length- 1; i >= 0; i--) {	
+		for (var i = canvasback.getObjects().length- 1; i >= 0; i--) {
 			canvasback.item(i).set("id", 'ly'+i);
-			$scope.quicklayersarray.push({id:'ly'+i,name:canvasback.item(i).type})
+			var act ='ly'+i
+			$scope[act] = canvasback.item(i).selectable
+			$scope[act+'2'] = canvasback.item(i).visible
+			if (canvasback.item(i).type=="image") {
+				$scope.quicklayersarray.push({id:'ly'+i,name:canvasback.item(i).type,img:canvasback.item(i).src})
+			}else{
+				$scope.quicklayersarray.push({id:'ly'+i,name:canvasback.item(i).type,img:canvasback.item(i).toDataURL("image/png")})
+			}
 			console.log($scope.quicklayersarray)
 			canvasback.renderAll();
 			//$('.quickinput').append("<input type='' value='"+canvas.item(i).text+"' name='"+canvas.item(i).text+"' placeholder='"+canvas.item(i).text+"'><br>");
@@ -926,111 +1093,117 @@ $scope.addText = function() {
 			cornerSize: 6,
 			transparentCorners: false
 		});
-			// textbox .setControlsVisibility({
-			// 	mt: false, mb: false, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true, 
-			// });
-			canvas.add(textbox);
-		}else{
-			textbox  = new fabric.Textbox('New Text Box', {
-				width: 180,
-				height:50,
-				left: (canvasback.width/2) - (canvasback.width/2 * 1/2),
-				top: (canvasback.height/2) - (canvasback.height/2 * 1/2),
-				fontSize: 30,
-				textAlign: 'left',
-				fixedWidth: 180,
-				cornerColor: '#ff46b4',
-				borderColor: '#ff46b4',
-				cornerSize: 6,
-				transparentCorners: false
+		textbox .setControlsVisibility({
+			mt: false, mb: false, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true, 
+		});
+		canvas.add(textbox);
+		$scope.reloadquicklayers()
+	}else{
+		textbox  = new fabric.Textbox('New Text Box', {
+			width: 180,
+			height:50,
+			left: (canvasback.width/2) - (canvasback.width/2 * 1/2),
+			top: (canvasback.height/2) - (canvasback.height/2 * 1/2),
+			fontSize: 30,
+			textAlign: 'left',
+			fixedWidth: 180,
+			cornerColor: '#ff46b4',
+			borderColor: '#ff46b4',
+			cornerSize: 6,
+			transparentCorners: false
 
-			});
-			// textbox .setControlsVisibility({
-			// 	mt: false, mb: false, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true, 
-			// });
-			canvasback.add(textbox);
-		}
+		});
+		textbox .setControlsVisibility({
+			mt: false, mb: false, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true, 
+		});
+		canvasback.add(textbox);
+		$scope.reloadquicklayers()
 	}
+}
 
-	canvasback.on('mouse:down', function(options) {
-		if (options.target!=null) {
-			options.target.hasControls = true;
-			options.target.set('cornerColor', '#ff46b4');
-			options.target.set('borderColor', '#ff46b4');
-			options.target.set('cornerSize', 6);
-			options.target.set('transparentCorners', false);
-			switch(options.target.type) {
-				case 'activeSelection':
-				$('#shapeoption').show()
-				$('#Entertext').hide()
-				$scope.texdisabled=true
-				$scope.fillselectedcolor=options.target.fill
-				$scope.bordeselectedcolor=options.target.stroke
-				$scope.topval=Math.round(canvas.height+25)+'px'
-				$scope.leftval=(Math.round(canvas.height))+'px'
-				$scope.Opacity=options.target.opacity
-				$scope.$apply();
-				break;
-				case 'group':
-				$('#shapeoption').show()
-				$('#Entertext').hide()
-				$scope.texdisabled=true
-				$scope.fillselectedcolor=options.target.fill
-				$scope.bordeselectedcolor=options.target.stroke
-				$scope.topval=Math.round(canvas.height+25)+'px'
-				$scope.leftval=(Math.round(canvas.height))+'px'
-				$scope.Opacity=options.target.opacity
-				$scope.$apply();
-				break;
-				case 'path':
-				$('#shapeoption').show()
-				$('#Entertext').hide()
-				$scope.texdisabled=true
-				$scope.fillselectedcolor=options.target.fill
-				$scope.bordeselectedcolor=options.target.stroke
-				$scope.topval=Math.round(canvas.height+25)+'px'
-				$scope.leftval=(Math.round(canvas.height))+'px'
-				$scope.Opacity=options.target.opacity
-				$scope.$apply();
-				break;
-				case 'rect':
-				$('#shapeoption').show()
-				$('#Entertext').hide()
-				$scope.texdisabled=true
-				$scope.fillselectedcolor=options.target.fill
-				$scope.bordeselectedcolor=options.target.stroke
-				$scope.topval=Math.round(canvas.height+25)+'px'
-				$scope.leftval=(Math.round(canvas.height))+'px'
-				$scope.Opacity=options.target.opacity
-				$scope.$apply();
-				break;
-				case 'line':
-				$('#shapeoption').show()
-				$('#Entertext').hide()
-				$scope.texdisabled=true
-				$scope.fillselectedcolor=options.target.fill
-				$scope.bordeselectedcolor=options.target.stroke
-				$scope.topval=Math.round(canvas.height+25)+'px'
-				$scope.leftval=(Math.round(canvas.height))+'px'
-				$scope.Opacity=options.target.opacity
-				$scope.$apply();
-				break;
-				case 'circle':
-				$('#shapeoption').show()
-				$('#Entertext').hide()
-				$scope.texdisabled=true
-				$scope.fillselectedcolor=options.target.fill
-				$scope.bordeselectedcolor=options.target.stroke
-				$scope.topval=Math.round(canvas.height+25)+'px'
-				$scope.leftval=(Math.round(canvas.height))+'px'
-				$scope.Opacity=options.target.opacity
-				$scope.$apply();
-				break;
-				case 'image':
-				$('#shapeoption').hide()
-				$('#Entertext').hide()
-				$scope.texdisabled=true
-				$scope.Opacity=options.target.opacity
+canvasback.on('mouse:down', function(options) {
+	if (options.target!=null) {
+		$('#quicklayer div').removeClass('quicklayerselec')
+		$('#'+options.target.id+'').addClass('quicklayerselec')
+		options.target.hasControls = true;
+		options.target.set('cornerColor', '#ff46b4');
+		options.target.set('borderColor', '#ff46b4');
+		options.target.set('cornerSize', 6);
+		options.target.set('transparentCorners', false);
+		switch(options.target.type) {
+			case 'activeSelection':
+			$('#shapeoption').show()
+			$('#Entertext').hide()
+			$scope.texdisabled=true
+			$scope.fillselectedcolor=options.target.fill
+			$scope.bordeselectedcolor=options.target.stroke
+			$scope.topval=Math.round(canvas.height+25)+'px'
+			$scope.leftval=(Math.round(canvas.height))+'px'
+			$scope.Opacity=options.target.opacity
+			$scope.$apply();
+			break;
+			case 'group':
+			$('#shapeoption').show()
+			$('#Entertext').hide()
+			$scope.texdisabled=true
+			$scope.fillselectedcolor=options.target.fill
+			$scope.bordeselectedcolor=options.target.stroke
+			$scope.topval=Math.round(canvas.height+25)+'px'
+			$scope.leftval=(Math.round(canvas.height))+'px'
+			$scope.Opacity=options.target.opacity
+			$scope.$apply();
+			break;
+			case 'path':
+			$('#shapeoption').show()
+			$('#Entertext').hide()
+			$scope.texdisabled=true
+			$scope.fillselectedcolor=options.target.fill
+			$scope.bordeselectedcolor=options.target.stroke
+			$scope.topval=Math.round(canvas.height+25)+'px'
+			$scope.leftval=(Math.round(canvas.height))+'px'
+			$scope.Opacity=options.target.opacity
+			$scope.$apply();
+			break;
+			case 'rect':
+			$('#shapeoption').show()
+			$('#Entertext').hide()
+			$scope.texdisabled=true
+			$scope.fillselectedcolor=options.target.fill
+			$scope.bordeselectedcolor=options.target.stroke
+			$scope.topval=Math.round(canvas.height+25)+'px'
+			$scope.leftval=(Math.round(canvas.height))+'px'
+			$scope.Opacity=options.target.opacity
+			$scope.$apply();
+			break;
+			case 'line':
+			$('#shapeoption').show()
+			$('#Entertext').hide()
+			$scope.texdisabled=true
+			$scope.fillselectedcolor=options.target.fill
+			$scope.bordeselectedcolor=options.target.stroke
+			$scope.topval=Math.round(canvas.height+25)+'px'
+			$scope.leftval=(Math.round(canvas.height))+'px'
+			$scope.Opacity=options.target.opacity
+			$scope.$apply();
+			break;
+
+
+			case 'circle':
+			$('#shapeoption').show()
+			$('#Entertext').hide()
+			$scope.texdisabled=true
+			$scope.fillselectedcolor=options.target.fill
+			$scope.bordeselectedcolor=options.target.stroke
+			$scope.topval=Math.round(canvas.height+25)+'px'
+			$scope.leftval=(Math.round(canvas.height))+'px'
+			$scope.Opacity=options.target.opacity
+			$scope.$apply();
+			break;
+			case 'image':
+			$('#shapeoption').hide()
+			$('#Entertext').hide()
+			$scope.texdisabled=true
+			$scope.Opacity=options.target.opacity
 				// $scope.fillselectedcolor=options.target.fill
 				// $scope.bordeselectedcolor=options.target.stroke
 				// $scope.topval=Math.round(options.target.top)+'px'
@@ -1049,8 +1222,14 @@ $scope.addText = function() {
 				$scope.$apply();
 				break;
 				case 'textbox':
+				fabric.log('JSON without default values: ',canvas.getObjects())
 				$('#Entertext').show()
 				$('#shapeoption').hide()
+				options.target.setControlsVisibility({
+					mt: false, mb: false, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true, 
+				});
+				$scope.myfont=options.target.fontFamily
+				$scope.myfontSize=options.target.fontSize
 				$scope.texdisabled=false
 				$scope.textselectedcolor=options.target.fill
 				$scope.textval=options.target.text
@@ -1100,18 +1279,18 @@ $scope.addText = function() {
 		});
 
 		var ellipse = new fabric.Ellipse({
-            left: 25,
+			left: 25,
 			top: 25,
-            rx: canvasback.width / 2 - 25,
-            ry: canvasback.height / 2 - 25,
-            fill: 'rgba(154,205,50,0)',
-            strokeDashArray: [4, 4],
+			rx: canvasback.width / 2 - 25,
+			ry: canvasback.height / 2 - 25,
+			fill: 'rgba(154,205,50,0)',
+			strokeDashArray: [4, 4],
 			stroke: '#007bff',
 			strokeWidth: 1,
 			selectable: false,
 			id: 5986,
 			cornerColor: '#ff46b4'
-             });
+		});
 		// cutsquare = new fabric.Rect({ 
 		// 	width: canvasback.width-30,
 		// 	height: canvasback.height-30,
@@ -1181,6 +1360,8 @@ $scope.addText = function() {
 canvas.on('mouse:down', function(options) {
 	console.log(options.target)
 	if (options.target!=null) {
+		$('#quicklayer div').removeClass('quicklayerselec')
+		$('#'+options.target.id+'').addClass('quicklayerselec')
 		options.target.hasControls = true;
 		options.target.set('cornerColor', '#ff46b4');
 		options.target.set('borderColor', '#ff46b4');
@@ -1279,6 +1460,11 @@ canvas.on('mouse:down', function(options) {
 				case 'textbox':
 				$('#Entertext').show()
 				$('#shapeoption').hide()
+				options.target.setControlsVisibility({
+					mt: false, mb: false, ml: true, mr: true, bl: false,br: false, tl: false, tr: false,mtr: true, 
+				});
+				$scope.myfont=options.target.fontFamily
+				$scope.myfontSize=options.target.fontSize
 				$scope.texdisabled=false
 				$scope.textselectedcolor=options.target.fill
 				$scope.textval=options.target.text
@@ -1328,18 +1514,18 @@ canvas.on('mouse:down', function(options) {
 			cornerColor: '#ff46b4'
 		});
 		var ellipse = new fabric.Ellipse({
-            left: 25,
+			left: 25,
 			top: 25,
-            rx: canvas.width / 2 - 25,
-            ry: canvas.height / 2 - 25,
-            fill: 'rgba(154,205,50,0)',
-            strokeDashArray: [4, 4],
+			rx: canvas.width / 2 - 25,
+			ry: canvas.height / 2 - 25,
+			fill: 'rgba(154,205,50,0)',
+			strokeDashArray: [4, 4],
 			stroke: '#007bff',
 			strokeWidth: 1,
 			selectable: false,
 			id: 5986,
 			cornerColor: '#ff46b4'
-             });
+		});
 		Bcircle = new fabric.Circle({
 			radius: canvas.width / 2 - 25,
 			fill: 'rgba(154,205,50,0)',
@@ -1358,7 +1544,7 @@ canvas.on('mouse:down', function(options) {
 		} else if (x.value == 4) {
 			canvas.add(Bsquare)
 		}else if (x.value == 6){
-             canvas.add(ellipse)
+			canvas.add(ellipse)
 		} else {
 			canvas.add(Bsquare)
 		}
@@ -1447,47 +1633,47 @@ $scope.showalerta = function() {
 	
 }
 canvas.on('object:moving', function(options) {
-	if (options.target.type=='activeSelection') {
-		if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
-			var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
-			var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
-			$scope.alerta=false
-			$scope.alertatop=topposition-25+'px'
-			$scope.alertaleft=leftposition+'px'
-		}else{
-			$scope.alerta=true
-		}
-	}
-	if (options.target.type=='textbox') {
-	    if (options.target.top < 25 ) {
-		    options.target.top = 25}
-	    if (options.target.left < 25) {
-		    options.target.left = 25}
-		if (options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 ) {
-		    options.target.top = (canvas.height)-(options.target.height*options.target.scaleY)-25}
-	    if (options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
-		    options.target.left = (canvas.width)-(options.target.width*options.target.scaleY)-25}
-	}
+	// if (options.target.type=='activeSelection') {
+	// 	if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
+	// 		var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
+	// 		var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
+	// 		$scope.alerta=false
+	// 		$scope.alertatop=topposition-25+'px'
+	// 		$scope.alertaleft=leftposition+'px'
+	// 	}else{
+	// 		$scope.alerta=true
+	// 	}
+	// }
+	// if (options.target.type=='textbox') {
+	//     if (options.target.top < 25 ) {
+	// 	    options.target.top = 25}
+	//     if (options.target.left < 25) {
+	// 	    options.target.left = 25}
+	// 	if (options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 ) {
+	// 	    options.target.top = (canvas.height)-(options.target.height*options.target.scaleY)-25}
+	//     if (options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
+	// 	    options.target.left = (canvas.width)-(options.target.width*options.target.scaleY)-25}
+	// }
 	$('#shapeoption').hide()
 	$('#Entertext').hide()
-	alinglineH = new fabric.Line([10, 10, canvas.width*2, 10], { 
-		left: 0,
-		top: options.target.top,
-		fill: 'rgba(154,205,50,0)',
-		stroke: '#f4005b',
-		strokeWidth: 1,
-		id:9986
-	});
-	alinglineV = new fabric.Line([10, 10,10, canvas.width*2], {
-		left: options.target.left,
-		top: 0,
-		fill: 'rgba(154,205,50,0)',
-		stroke: '#f4005b',
-		strokeWidth: 1,
-		id:9986
-	});
-	canvas.add(alinglineV);
-	canvas.add(alinglineH);
+	// alinglineH = new fabric.Line([10, 10, canvas.width*2, 10], { 
+	// 	left: 0,
+	// 	top: options.target.top,
+	// 	fill: 'rgba(154,205,50,0)',
+	// 	stroke: '#f4005b',
+	// 	strokeWidth: 1,
+	// 	id:9986
+	// });
+	// alinglineV = new fabric.Line([10, 10,10, canvas.width*2], {
+	// 	left: options.target.left,
+	// 	top: 0,
+	// 	fill: 'rgba(154,205,50,0)',
+	// 	stroke: '#f4005b',
+	// 	strokeWidth: 1,
+	// 	id:9986
+	// });
+	// canvas.add(alinglineV);
+	// canvas.add(alinglineH);
 	setTimeout(function() {	
 		for (var i = 0; i < canvas.getObjects().length; ++i) { 
 			if (canvas.item(i).id == 9986) { 	
@@ -1500,48 +1686,48 @@ canvas.on('object:moving', function(options) {
 });
 
 canvasback.on('object:moving', function(options){
-	if (options.target.type=='activeSelection') {
-		if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
-			var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
-			var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
-			$scope.alerta=false
-			$scope.alertatop=topposition-25+'px'
-			$scope.alertaleft=leftposition+'px'
-		}else{
-			$scope.alerta=true
-		}
-	}
-	if (options.target.type=='textbox') {
-	    if (options.target.top < 25 ) {
-		    options.target.top = 25}
-	    if (options.target.left < 25) {
-		    options.target.left = 25}
-		if (options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 ) {
-		    options.target.top = (canvasback.height)-(options.target.height*options.target.scaleY)-25}
-	    if (options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
-		    options.target.left = (canvasback.width)-(options.target.width*options.target.scaleY)-25}
+	// if (options.target.type=='activeSelection') {
+	// 	if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
+	// 		var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
+	// 		var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
+	// 		$scope.alerta=false
+	// 		$scope.alertatop=topposition-25+'px'
+	// 		$scope.alertaleft=leftposition+'px'
+	// 	}else{
+	// 		$scope.alerta=true
+	// 	}
+	// }
+	// if (options.target.type=='textbox') {
+	//     if (options.target.top < 25 ) {
+	// 	    options.target.top = 25}
+	//     if (options.target.left < 25) {
+	// 	    options.target.left = 25}
+	// 	if (options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 ) {
+	// 	    options.target.top = (canvasback.height)-(options.target.height*options.target.scaleY)-25}
+	//     if (options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
+	// 	    options.target.left = (canvasback.width)-(options.target.width*options.target.scaleY)-25}
 
-	}
+	// }
 	$('#shapeoption').hide()
 	$('#Entertext').hide()
-	alinglineH = new fabric.Line([10, 10, canvasback.width*2, 10], { 
-		left: 0,
-		top: options.target.top,
-		fill: 'rgba(154,205,50,0)',
-		stroke: '#f4005b',
-		strokeWidth: 1,
-		id:9986
-	});
-	alinglineV = new fabric.Line([10, 10,10, canvasback.width*2], {
-		left: options.target.left,
-		top: 0,
-		fill: 'rgba(154,205,50,0)',
-		stroke: '#f4005b',
-		strokeWidth: 1,
-		id:9986
-	});
-	canvasback.add(alinglineV);
-	canvasback.add(alinglineH);
+	// alinglineH = new fabric.Line([10, 10, canvasback.width*2, 10], { 
+	// 	left: 0,
+	// 	top: options.target.top,
+	// 	fill: 'rgba(154,205,50,0)',
+	// 	stroke: '#f4005b',
+	// 	strokeWidth: 1,
+	// 	id:9986
+	// });
+	// alinglineV = new fabric.Line([10, 10,10, canvasback.width*2], {
+	// 	left: options.target.left,
+	// 	top: 0,
+	// 	fill: 'rgba(154,205,50,0)',
+	// 	stroke: '#f4005b',
+	// 	strokeWidth: 1,
+	// 	id:9986
+	// });
+	// canvasback.add(alinglineV);
+	// canvasback.add(alinglineH);
 	setTimeout(function() {	
 		for (var i = 0; i < canvasback.getObjects().length; ++i) { 
 			if (canvasback.item(i).id == 9986) { 	
@@ -1637,27 +1823,27 @@ $scope.showentertext = function() {
 }
 
 canvas.on('object:scaling', function(options) {
-    if (options.target.type=='activeSelection') {
-		if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
-			var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
-			var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
-			$scope.alerta=false
-			$scope.alertatop=topposition-25+'px'
-			$scope.alertaleft=leftposition+'px'
-		}else{
-			$scope.alerta=true
-		}
-	}
-	if (options.target.type=='textbox') {
-	    if (options.target.top < 25 ) {
-		    options.target.top = 25}
-	    if (options.target.left < 25) {
-		    options.target.left = 25}
-		if (options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 ) {
-		    options.target.top = (canvas.height)-(options.target.height*options.target.scaleY)-25}
-	    if (options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
-		    options.target.left = (canvas.width)-(options.target.width*options.target.scaleY)-25}
-	}
+ //    if (options.target.type=='activeSelection') {
+	// 	if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
+	// 		var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
+	// 		var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
+	// 		$scope.alerta=false
+	// 		$scope.alertatop=topposition-25+'px'
+	// 		$scope.alertaleft=leftposition+'px'
+	// 	}else{
+	// 		$scope.alerta=true
+	// 	}
+	// }
+	// if (options.target.type=='textbox') {
+	//     if (options.target.top < 25 ) {
+	// 	    options.target.top = 25}
+	//     if (options.target.left < 25) {
+	// 	    options.target.left = 25}
+	// 	if (options.target.top+(options.target.height*options.target.scaleY) > canvas.height-25 ) {
+	// 	    options.target.top = (canvas.height)-(options.target.height*options.target.scaleY)-25}
+	//     if (options.target.left+(options.target.width*options.target.scaleX) > canvas.width-25) {
+	// 	    options.target.left = (canvas.width)-(options.target.width*options.target.scaleY)-25}
+	// }
 
 	
 	$scope.canvassize()	
@@ -1676,28 +1862,28 @@ canvas.on('object:scaling', function(options) {
 });
 
 canvasback.on('object:scaling', function(options) {
-	if (options.target.type=='activeSelection') {
-		if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
-			var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
-			var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
-			$scope.alerta=false
-			$scope.alertatop=topposition-25+'px'
-			$scope.alertaleft=leftposition+'px'
-		}else{
-			$scope.alerta=true
-		}
-	}
-	if (options.target.type=='textbox') {
-	    if (options.target.top < 25 ) {
-		    options.target.lockScalingY = true}
-	    if (options.target.left < 25) {
-		    options.target.left = 25}
-		if (options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 ) {
-		    options.target.top = (canvasback.height)-(options.target.height*options.target.scaleY)-25}
-	    if (options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
-		    options.target.left = (canvasback.width)-(options.target.width*options.target.scaleY)-25}
+	// if (options.target.type=='activeSelection') {
+	// 	if (options.target.top < 20 || options.target.left < 20 || options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 || options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
+	// 		var leftposition = (options.target.left < 0) ? options.target.left = 0 : options.target.left;
+	// 		var topposition = (options.target.top < 0) ? options.target.top = 0 : options.target.top;
+	// 		$scope.alerta=false
+	// 		$scope.alertatop=topposition-25+'px'
+	// 		$scope.alertaleft=leftposition+'px'
+	// 	}else{
+	// 		$scope.alerta=true
+	// 	}
+	// }
+	// if (options.target.type=='textbox') {
+	//     if (options.target.top < 25 ) {
+	// 	    options.target.lockScalingY = true}
+	//     if (options.target.left < 25) {
+	// 	    options.target.left = 25}
+	// 	if (options.target.top+(options.target.height*options.target.scaleY) > canvasback.height-25 ) {
+	// 	    options.target.top = (canvasback.height)-(options.target.height*options.target.scaleY)-25}
+	//     if (options.target.left+(options.target.width*options.target.scaleX) > canvasback.width-25) {
+	// 	    options.target.left = (canvasback.width)-(options.target.width*options.target.scaleY)-25}
 
-	}
+	// }
 	$scope.canvassize()	
 	$('#shapeoption').hide()
 	$('#Entertext').hide()
@@ -1712,27 +1898,27 @@ canvasback.on('object:scaling', function(options) {
 	$scope.outline2leftval=canvasback.getActiveObject().left+((canvasback.getActiveObject().width * canvasback.getActiveObject().scaleX)+20)+'px'
 	$scope.$apply()
 });
-canvas.on('mouse:dblclick', function(e) {
+// canvas.on('mouse:dblclick', function(e) {
 
-	e.target.set({ hasControls: true, hasBorders: true, selectable: true });
-	var type1 =e.target.type
-	if (type1 ==='textbox') {
-		canvas.renderAll();
-		$scope.showentertext()
-	} 
-});
+// 	e.target.set({ hasControls: true, hasBorders: true, selectable: true });
+// 	var type1 =e.target.type
+// 	if (type1 ==='textbox') {
+// 		canvas.renderAll();
+// 		$scope.showentertext()
+// 	} 
+// });
 
 
-canvasback.on('mouse:dblclick', function(e) {
+// canvasback.on('mouse:dblclick', function(e) {
 
-	e.target.set({ hasControls: true, hasBorders: true, selectable: true });
-	var type1 =e.target.type
-	if (type1 ==='textbox') {
-		canvasback.renderAll();
-		$scope.showentertext()
+// 	e.target.set({ hasControls: true, hasBorders: true, selectable: true });
+// 	var type1 =e.target.type
+// 	if (type1 ==='textbox') {
+// 		canvasback.renderAll();
+// 		$scope.showentertext()
 
-	} 
-});
+// 	} 
+// });
 
 
 canvas.on("object:added", function (e) {
@@ -2220,6 +2406,9 @@ $scope.changestrokeweigth = function(h,q,a,j){
 	}
 }
 
+
+
+
 $scope.lock = function(i) {
 	if ($scope.cvside) {
 		objectolock = canvas.getActiveObject()
@@ -2227,9 +2416,11 @@ $scope.lock = function(i) {
 			objectolock.set({ hasControls: false, hasBorders: false, selectable: false });
 			canvas.discardActiveObject()
 			canvas.renderAll();
+			$scope.reloadquicklayers()
 		}else{
 			objectolock.set({ hasControls: true, hasBorders: true, selectable: true });
 			canvas.renderAll();
+			$scope.reloadquicklayers()
 		}
 	}else{
 		objectolock = canvasback.getActiveObject()
@@ -2237,9 +2428,11 @@ $scope.lock = function(i) {
 			objectolock.set({ hasControls: false, hasBorders: false, selectable: false });
 			canvasback.discardActiveObject()
 			canvasback.renderAll();
+			$scope.reloadquicklayers()
 		}else{
 			objectolock.set({ hasControls: true, hasBorders: true, selectable: true });
 			canvasback.renderAll();
+			$scope.reloadquicklayers()
 		}
 	}
 }
@@ -2467,35 +2660,27 @@ $scope.SelctedTemplate = function(idtemplate,nm,side) {
             url: 'BDJsonupload', // point to server-side PHP script
             data: {action:5,id:idtemplate},
             type: 'POST',
-            //contentType: false, // The content type used when sending data to the server.
-            //cache: false, // To unable request pages to be cached
-            //processData: false,
             success: function(data) {   
             	if (side) {
             		canvas.loadFromJSON(data.success[0].cv);
-            	canvas.renderAll();
-            	canvasback.loadFromJSON(data.success[0].cv2);
-            	canvasback.renderAll();
-            	$scope.SelctedTemplateval=false
-            }else{
-            	canvasback.loadFromJSON(data.success[0].cv);
-            	canvasback.renderAll();
-            	canvas.loadFromJSON(data.success[0].cv2);
-            	canvas.renderAll();
-            	$scope.SelctedTemplateval=false
-            }
-            	
+            		canvas.renderAll();
+            		canvasback.loadFromJSON(data.success[0].cv2);
+            		canvasback.renderAll();
+            		$scope.SelctedTemplateval=false
+            	}else{
+            		canvasback.loadFromJSON(data.success[0].cv);
+            		canvasback.renderAll();
+            		canvas.loadFromJSON(data.success[0].cv2);
+            		canvas.renderAll();
+            		$scope.SelctedTemplateval=false
+            	}
             	setTimeout(function() {	
             		$("#preloader").hide();
             		$("#pageload").hide();
             	}, 500); 
-            	
-
             }
         });
-
 }
-
 $scope.sendingtemplate = function(name,act){
 	$scope.tempsave1        = canvas.toJSON();
 	$scope.tempAsJson1        = JSON.stringify($scope.tempsave1);
@@ -2588,7 +2773,7 @@ $scope.addtemplate = function(t){
             processData: false,
             success: function(data) {       
             	$scope.canvastemplate =data
-            	console.log($scope.canvastemplate)
+            	console.log('de deonde'+$scope.canvastemplate)
             }
         });
 	                	}else{
@@ -2678,7 +2863,7 @@ $scope.addtemplate = function(t){
 	                		for (var i = $scope.touploadcanvastemplate.length - 1; i >= 0; i--) {
 	                			$.ajax({
             url: 'BDJsonupload', // point to server-side PHP script
-            data: {action:1,id:$scope.touploadcanvastemplate[i].id,name:$scope.touploadcanvastemplate[i].name,cv:$scope.touploadcanvastemplate[i].cv,cv2:$scope.touploadcanvastemplate[i].cv2,img:$scope.touploadcanvastemplate[i].img,img2:$scope.touploadcanvastemplate[i].img2},
+            data: {action:1,id:$scope.touploadcanvastemplate[i].id,name:$scope.touploadcanvastemplate[i].name,cv:$scope.touploadcanvastemplate[i].cv,cv2:$scope.touploadcanvastemplate[i].cv2,img:$scope.touploadcanvastemplate[i].img,img2:$scope.touploadcanvastemplate[i].img2,textsize:$('#TextSize').val(),orientation:$('#Orientation').val()},
             type: 'POST',
             //contentType: false, // The content type used when sending data to the server.
             //cache: false, // To unable request pages to be cached
@@ -2695,7 +2880,7 @@ $scope.addtemplate = function(t){
 	                		case 2:
 	                		$.ajax({
             url: 'BDJsonupload', // point to server-side PHP script
-            data: {action:2},
+            data: {action:2,filter:$('#idcard').val(),OrientationFilter:$('#Orientation').val(),SizeFilter:$('#TextSize').val()},
             type: 'POST',
             //contentType: false, // The content type used when sending data to the server.
             //cache: false, // To unable request pages to be cached
@@ -3036,9 +3221,9 @@ setTimeout(function() {
 	//$scope.BDtemplate(2)
 	console.log(document.cookie.indexOf('canvassave1='))
 	if (document.cookie.indexOf('canvassave1=') > 1) {
-    
+
 	}else{
-$scope.BDtemplate(2)
+		$scope.BDtemplate(2)
 	}
 	$("#pageload").hide();
 	$("#preloader").hide();

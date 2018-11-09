@@ -140,7 +140,7 @@ PostCards - Printing Lab
           <input type="submit" value="UPLOAD YOUR FILE & ORDER NOW" class="btn validate_form_upload">
         </form>
         <!-- diseñador -->
-        <form name="fromoculto1" id="form_Design" class="movil_BC" action="{{route('tool')}}" method="post" enctype="multipart/form-data">
+        <form name="form_Design" id="form_Design" class="movil_BC" action="{{route('tool')}}" method="post" enctype="multipart/form-data">
           {{csrf_field()}}
           @foreach ($producto as $dato )
           <input type="hidden" name="id_P" id="id_P" value="{{$dato->id_productos}}">
@@ -149,9 +149,10 @@ PostCards - Printing Lab
           <input type="hidden" name="_idC"  id="_idC" value="5">
           <input type="hidden" name="_size"  id="_size" value="{{$attr1}}">
           <input type="hidden" name="_sides" id="_sides" value="{{$attr3}}">
+          <input type="hidden" name="val_orientation" value="1"  id="val_orientation">
           <input type="hidden" name="_idspc"  id="_idspc" value="{{$especificacion}}">
           <input type="hidden" name="_Corners"  id="_Corners">
-          <input type="submit" value="CREATE YOUR DESIGN ONLINE" class="btn validate_form_design">
+          <input type="button"  data-toggle="modal" data-target="#orientation" value="CREATE YOUR DESIGN ONLINE" class="btn validate_form_design">
         </form>
         <!-- nosotros lo diseñamos -->
         <form name="fromoculto1" id="form_Wedesign"  action="{{route('we-designed')}}" method="post" enctype="multipart/form-data">
@@ -342,391 +343,349 @@ PostCards - Printing Lab
     </div>
   </div>
 </div>
+<div class="modal fade" id="orientation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choose your desing orientation:</h5>
+      </div>
+      <div class="modal-body" style="margin: auto;">
+       <div class="form-row">
+        <div class="col">
+          <div class="orizontal"></div>
+          <div class="form-check">
+            <input onclick="SetOrientation(1)" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+            <label class="form-check-label" for="exampleRadios1">
+              Horizontal
+            </label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="vertical"></div>
+          <div class="form-check">
+            <input onclick="SetOrientation(2)" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+              Vertical
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary orietation-btn" data-dismiss="modal" onclick="openform_Design()">Continue ></button>
+    </div>
+  </div>
+</div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
-function carga_allSelect(size, stock, printedside, coating, quantity_inicial, printingtime_inicial){
-  size();
-  stock();
-  printedside();
-  coating();
-  quantity_inicial();
-  printingtime_inicial();
-}
+  function SetOrientation(i) {
+    $( "#val_orientation" ).val(i)
+  }
 
-function size(){
-  $.get("attr1_postcards",function(result){
-    var input =$("#size").val()
-    if (result.length!==1){
-      for(i=0; i<result.length; i++){
-        if (result[i].attr1!==input){
-          $("#size").append("<option value='"+result[i].attr1+"'>"+result[i].attr1+"</option>");
+  function openform_Design() {
+    $( "#form_Design" ).submit();
+  }
+
+  function carga_allSelect(size, stock, printedside, coating, quantity_inicial, printingtime_inicial){
+    size();
+    stock();
+    printedside();
+    coating();
+    quantity_inicial();
+    printingtime_inicial();
+  }
+
+  function size(){
+    $.get("attr1_postcards",function(result){
+      var input =$("#size").val()
+      if (result.length!==1){
+        for(i=0; i<result.length; i++){
+          if (result[i].attr1!==input){
+            $("#size").append("<option value='"+result[i].attr1+"'>"+result[i].attr1+"</option>");
+          }
         }
       }
-    }
-  })
-}
+    })
+  }
 
-function stock(){
-  var at1=$("#size").val()
-  $.get("attr2_postcards/"+at1,function(result){
-    var input=$("#stock").val()
-    for(i=0; i<result.length; i++){
-      if (result[i].attr2!==input){
-        $("#stock").append("<option value='"+result[i].attr2+"'>"+result[i].attr2+"</option>");
-      }
-    }
-  })
-}
-
-function printedside(){
-  var at1=$("#size").val()
-  var at2=$("#stock").val()
-  $.get("attr3_postcards/"+at1+"/"+at2,function(result){
-    var input=$("#printedside").val()
-    for(i=0; i<result.length; i++){
-      if (result[i].attr3!==input){
-        $("#printedside").append("<option value='"+result[i].attr3+"'>"+result[i].attr3+"</option>");
-      }
-    }
-  })
-}
-
-function coating(){
-  var at1=$("#size").val()
-  var at2=$("#stock").val()
-  var at3=$("#printedside").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'attr4_postcards',
-    data:{atr1:at1,atr2:at2,atr3:at3},
-    type:'POST',
-    success: function(result){
-      var input=$("#coating").val()
+  function stock(){
+    var at1=$("#size").val()
+    $.get("attr2_postcards/"+at1,function(result){
+      var input=$("#stock").val()
       for(i=0; i<result.length; i++){
-        if (result[i].attr4!==input){
-          $("#coating").append("<option value='"+result[i].attr4+"'>"+result[i].attr4+"</option>");
+        if (result[i].attr2!==input){
+          $("#stock").append("<option value='"+result[i].attr2+"'>"+result[i].attr2+"</option>");
         }
       }
-    }
-  })
-}
+    })
+  }
 
-function quantity_inicial(){
-  var at1=$("#size").val()
-  var at2=$("#stock").val()
-  var at3=$("#printedside").val()
-  var at4=$("#coating").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'attr10_postcards',
-    data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4},
-    type:'POST',
-    success: function(result){
-      var input = parseInt($("#quantity").val())
+  function printedside(){
+    var at1=$("#size").val()
+    var at2=$("#stock").val()
+    $.get("attr3_postcards/"+at1+"/"+at2,function(result){
+      var input=$("#printedside").val()
       for(i=0; i<result.length; i++){
-        if (result[i].attr10!==input){
-          $("#quantity").append("<option value='"+result[i].attr10+"'>"+result[i].attr10+"</option>");
+        if (result[i].attr3!==input){
+          $("#printedside").append("<option value='"+result[i].attr3+"'>"+result[i].attr3+"</option>");
         }
       }
-    }
-  })
-}
+    })
+  }
 
-function printingtime_inicial(){
-  var at1=$("#size").val()
-  var at2=$("#stock").val()
-  var at3=$("#printedside").val()
-  var at4=$("#coating").val()
-  var at10=$("#quantity").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'attr11_postcards',
-    data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4,atr10:at10},
-    type:'POST',
-    success: function(result){
-      var input=$("#printingtime").val()
-      for(i=0; i<result.length; i++){
-        if (result[i].attr11!==input){
-          $("#printingtime").append("<option value='"+result[i].attr11+"'>"+result[i].attr11+"</option>")
+  function coating(){
+    var at1=$("#size").val()
+    var at2=$("#stock").val()
+    var at3=$("#printedside").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'attr4_postcards',
+      data:{atr1:at1,atr2:at2,atr3:at3},
+      type:'POST',
+      success: function(result){
+        var input=$("#coating").val()
+        for(i=0; i<result.length; i++){
+          if (result[i].attr4!==input){
+            $("#coating").append("<option value='"+result[i].attr4+"'>"+result[i].attr4+"</option>");
+          }
         }
       }
-    }
-  })
-}
+    })
+  }
 
-carga_allSelect(size,stock,printedside,coating,quantity_inicial,printingtime_inicial)
-
-function quinto(entrada){
-  var at1=$("#size").val()
-  var at2=$("#stock").val()
-  var at3=$("#printedside").val()
-  var at4=$("#coating").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'attr5_postcards',
-    data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4},
-    type:'POST',
-    success: function(result){
-      var input=$("#"+entrada+"").val()
-      for(i=0; i<result.length; i++){
-        if (result[i].attr5!==input){
-          $("#"+entrada+"").append("<option value='"+result[i].attr5+"'>"+result[i].attr5+"</option>")
+  function quantity_inicial(){
+    var at1=$("#size").val()
+    var at2=$("#stock").val()
+    var at3=$("#printedside").val()
+    var at4=$("#coating").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'attr10_postcards',
+      data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4},
+      type:'POST',
+      success: function(result){
+        var input = parseInt($("#quantity").val())
+        for(i=0; i<result.length; i++){
+          if (result[i].attr10!==input){
+            $("#quantity").append("<option value='"+result[i].attr10+"'>"+result[i].attr10+"</option>");
+          }
         }
       }
-    }
-  })
-}
+    })
+  }
 
-function quantity_inicial_5(entrada){
-  var at1=$("#size").val()
-  var at2=$("#stock").val()
-  var at3=$("#printedside").val()
-  var at4=$("#coating").val()
-  var at5=$("#"+entrada+"").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'attr10_postcards_5',
-    data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4,atr5:at5},
-    type:'POST',
-    success: function(result){
-      var input = parseInt($("#quantity").val())
-      for(i=0; i<result.length; i++){
-        if (result[i].attr10!==input){
-          $("#quantity").append("<option value='"+result[i].attr10+"'>"+result[i].attr10+"</option>");
+  function printingtime_inicial(){
+    var at1=$("#size").val()
+    var at2=$("#stock").val()
+    var at3=$("#printedside").val()
+    var at4=$("#coating").val()
+    var at10=$("#quantity").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'attr11_postcards',
+      data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4,atr10:at10},
+      type:'POST',
+      success: function(result){
+        var input=$("#printingtime").val()
+        for(i=0; i<result.length; i++){
+          if (result[i].attr11!==input){
+            $("#printingtime").append("<option value='"+result[i].attr11+"'>"+result[i].attr11+"</option>")
+          }
         }
       }
-    }
-  })
-}
+    })
+  }
 
-function printingtime_inicial_5(entrada){
-  var at1=$("#size").val()
-  var at2=$("#stock").val()
-  var at3=$("#printedside").val()
-  var at4=$("#coating").val()
-  var at5=$("#"+entrada+"").val()
-  var at10=$("#quantity").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'attr11_postcards_5',
-    data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4,atr5:at5,atr10:at10},
-    type:'POST',
-    success: function(result){
-      var input=$("#printingtime").val()
-      for(i=0; i<result.length; i++){
-        if (result[i].attr11!==input){
-          $("#printingtime").append("<option value='"+result[i].attr11+"'>"+result[i].attr11+"</option>")
+  carga_allSelect(size,stock,printedside,coating,quantity_inicial,printingtime_inicial)
+
+  function quinto(entrada){
+    var at1=$("#size").val()
+    var at2=$("#stock").val()
+    var at3=$("#printedside").val()
+    var at4=$("#coating").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'attr5_postcards',
+      data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4},
+      type:'POST',
+      success: function(result){
+        var input=$("#"+entrada+"").val()
+        for(i=0; i<result.length; i++){
+          if (result[i].attr5!==input){
+            $("#"+entrada+"").append("<option value='"+result[i].attr5+"'>"+result[i].attr5+"</option>")
+          }
         }
       }
-    }
-  })
-}
+    })
+  }
 
-function size_change(){
-  var attr1=$("#size").val();
-  $("#_size").val(attr1);
-  $.get("postcardsattr1/"+attr1,function(result){
-    $('#stock').empty();
-    $('#printedside').empty();
-    $('#coating').empty();
-    $('#drill').empty();
-    $('#Corners').empty();
-    $('#quantity').empty();
-    $("#printingtime").empty();
-    $('#labeltxt').empty();
-    if (attr1==='3" x 4"') {
-      $("#row_edge").css({display: 'flex'})
-      $("#row_edge_2").css({display: 'none'})
-      $("#stock").append("<option value='"+result[0].attr2+"'>"+result[0].attr2+"</option>")
-      $('#printedside').append("<option value='"+result[0].attr3+"'>"+result[0].attr3+"</option>")
-      $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
-      $('#drill').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
-      $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
-      $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-      $('#labeltxt').html(result[0].attr12);
-      stock()
-      printedside()
-      coating()
-      quinto('drill')
-      quantity_inicial_5('drill')
-      printingtime_inicial_5('drill')
-      document.getElementById("idE").value =result[0].id_especificaciones;
-      document.getElementById("idE2").value =result[0].id_especificaciones;
-      document.getElementById("Rselectcaras").value =result[0].attr3;
-      document.getElementById("Rselectcaras2").value =result[0].attr3;
-      $("#_sides").val(result[0].attr3)
-      $("#_Corners").val(result[0].attr5)
-      $("#_idspc").val(result[0].id_especificaciones);
-    }else{
-      $("#row_edge").css({display: 'none'})
-      $("#row_edge_2").css({display: 'none'})
-      $("#stock").append("<option value='"+result[0].attr2+"'>"+result[0].attr2+"</option>")
-      $('#printedside').append("<option value='"+result[0].attr3+"'>"+result[0].attr3+"</option>")
-      $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
-      $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
-      $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-      $('#labeltxt').html(result[0].attr12);
-      stock()
-      printedside()
-      coating()
-      quantity_inicial()
-      printingtime_inicial()
-      document.getElementById("idE").value =result[0].id_especificaciones;
-      document.getElementById("idE2").value =result[0].id_especificaciones;
-      document.getElementById("Rselectcaras").value =result[0].attr3;
-      document.getElementById("Rselectcaras2").value =result[0].attr3;
-      $("#_sides").val(result[0].attr3)
-      $("#_Corners").val(result[0].attr5)
-      $("#_idspc").val(result[0].id_especificaciones);
-    }
-  })
-}
+  function quantity_inicial_5(entrada){
+    var at1=$("#size").val()
+    var at2=$("#stock").val()
+    var at3=$("#printedside").val()
+    var at4=$("#coating").val()
+    var at5=$("#"+entrada+"").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'attr10_postcards_5',
+      data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4,atr5:at5},
+      type:'POST',
+      success: function(result){
+        var input = parseInt($("#quantity").val())
+        for(i=0; i<result.length; i++){
+          if (result[i].attr10!==input){
+            $("#quantity").append("<option value='"+result[i].attr10+"'>"+result[i].attr10+"</option>");
+          }
+        }
+      }
+    })
+  }
 
-function stock_change(){
-  var attr1=$("#size").val();
-  var attr2=$("#stock").val();
-  $.get("postcardsattr2/"+attr1+"/"+attr2, function(result){
-    $("#row_edge_2").css({display: 'none'});
-    $("#row_edge").css({display: 'none'});
-    $('#printedside').empty();
-    $('#coating').empty();
-    $('#Corners').empty();
-    $('#drill').empty();
-    $('#quantity').empty();
-    $("#printingtime").empty();
-    $('#labeltxt').empty();
-    $('#printedside').append("<option value='"+result[0].attr3+"'>"+result[0].attr3+"</option>")
-    $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
-    $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
-    $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-    $('#labeltxt').html(result[0].attr12);
-    if (result[0].attr5!=''){
-      if ( attr1==='4" x 6"'&& attr2==='16 Point' ) {
-        $("#row_edge_2").css({display:'flex'})
-        $('#Corners').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
-        quinto('Corners')
-        quantity_inicial_5('Corners')
-        printingtime_inicial_5('Corners')
-      }else {
-        $("#row_edge").css({display:'flex'})
+  function printingtime_inicial_5(entrada){
+    var at1=$("#size").val()
+    var at2=$("#stock").val()
+    var at3=$("#printedside").val()
+    var at4=$("#coating").val()
+    var at5=$("#"+entrada+"").val()
+    var at10=$("#quantity").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'attr11_postcards_5',
+      data:{atr1:at1,atr2:at2,atr3:at3,atr4:at4,atr5:at5,atr10:at10},
+      type:'POST',
+      success: function(result){
+        var input=$("#printingtime").val()
+        for(i=0; i<result.length; i++){
+          if (result[i].attr11!==input){
+            $("#printingtime").append("<option value='"+result[i].attr11+"'>"+result[i].attr11+"</option>")
+          }
+        }
+      }
+    })
+  }
+
+  function size_change(){
+    var attr1=$("#size").val();
+    $("#_size").val(attr1);
+    $.get("postcardsattr1/"+attr1,function(result){
+      $('#stock').empty();
+      $('#printedside').empty();
+      $('#coating').empty();
+      $('#drill').empty();
+      $('#Corners').empty();
+      $('#quantity').empty();
+      $("#printingtime").empty();
+      $('#labeltxt').empty();
+      if (attr1==='3" x 4"') {
+        $("#row_edge").css({display: 'flex'})
+        $("#row_edge_2").css({display: 'none'})
+        $("#stock").append("<option value='"+result[0].attr2+"'>"+result[0].attr2+"</option>")
+        $('#printedside').append("<option value='"+result[0].attr3+"'>"+result[0].attr3+"</option>")
+        $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
         $('#drill').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
+        $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
+        $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
+        $('#labeltxt').html(result[0].attr12);
+        stock()
+        printedside()
+        coating()
         quinto('drill')
         quantity_inicial_5('drill')
         printingtime_inicial_5('drill')
+        document.getElementById("idE").value =result[0].id_especificaciones;
+        document.getElementById("idE2").value =result[0].id_especificaciones;
+        document.getElementById("Rselectcaras").value =result[0].attr3;
+        document.getElementById("Rselectcaras2").value =result[0].attr3;
+        $("#_sides").val(result[0].attr3)
+        $("#_Corners").val(result[0].attr5)
+        $("#_idspc").val(result[0].id_especificaciones);
+      }else{
+        $("#row_edge").css({display: 'none'})
+        $("#row_edge_2").css({display: 'none'})
+        $("#stock").append("<option value='"+result[0].attr2+"'>"+result[0].attr2+"</option>")
+        $('#printedside').append("<option value='"+result[0].attr3+"'>"+result[0].attr3+"</option>")
+        $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
+        $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
+        $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
+        $('#labeltxt').html(result[0].attr12);
+        stock()
+        printedside()
+        coating()
+        quantity_inicial()
+        printingtime_inicial()
+        document.getElementById("idE").value =result[0].id_especificaciones;
+        document.getElementById("idE2").value =result[0].id_especificaciones;
+        document.getElementById("Rselectcaras").value =result[0].attr3;
+        document.getElementById("Rselectcaras2").value =result[0].attr3;
+        $("#_sides").val(result[0].attr3)
+        $("#_Corners").val(result[0].attr5)
+        $("#_idspc").val(result[0].id_especificaciones);
       }
-    }else{
-      printedside()
-      coating()
-      quantity_inicial()
-      printingtime_inicial()
-    }
-    document.getElementById("idE").value =result[0].id_especificaciones
-    document.getElementById("idE2").value =result[0].id_especificaciones
-    document.getElementById("Rselectcaras").value =result[0].attr3
-    document.getElementById("Rselectcaras2").value =result[0].attr3
-    $("#_sides").val(result[0].attr3)
-    $("#_Corners").val(result[0].attr5)
-    $("#_idspc").val(result[0].id_especificaciones)
-  })
-}
+    })
+  }
 
-function printedside_change(){
-  var attr1=$("#size").val();
-  var attr2=$("#stock").val();
-  var attr3=$("#printedside").val();
-  $.get("postcardsattr3/"+attr1+"/"+attr2+"/"+attr3, function(result){
-    console.log(result)
-    $("#row_edge_2").css({display: 'none'});
-    $("#row_edge").css({display: 'none'});
-    $('#coating').empty();
-    $('#Corners').empty();
-    $('#drill').empty();
-    $('#quantity').empty();
-    $("#printingtime").empty();
-    $('#labeltxt').empty();
-    $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
-    $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
-    $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
-    $('#labeltxt').html(result[0].attr12);
-    coating()
-    quantity_inicial()
-    printingtime_inicial()
-    document.getElementById("idE").value =result[0].id_especificaciones;
-    document.getElementById("idE2").value =result[0].id_especificaciones;
-    document.getElementById("Rselectcaras").value =attr3;
-    document.getElementById("Rselectcaras2").value =attr3;
-    $("#_sides").val(attr3)
-    $("#_Corners").val(result[0].attr5)
-    $("#_idspc").val(result[0].id_especificaciones);
-  })
-}
-
-function coating_change(){
-  var attr1=$("#size").val()
-  var attr2=$("#stock").val()
-  var attr3=$("#printedside").val()
-  var attr4=$("#coating").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'postcardsattr4',
-    data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4},
-    type:'POST',
-    success: function(result){
-      $("#row_edge_2").css({display: 'none'})
-      $("#row_edge").css({display: 'none'})
-      $('#Corners').empty()
-      $('#drill').empty()
-      $("#quantity").empty()
-      $('#labeltxt').empty()
-      $('#printingtime').empty()
-      $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>")
-      $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>")
-      $('#labeltxt').html(result[0].attr12)
+  function stock_change(){
+    var attr1=$("#size").val();
+    var attr2=$("#stock").val();
+    $.get("postcardsattr2/"+attr1+"/"+attr2, function(result){
+      $("#row_edge_2").css({display: 'none'});
+      $("#row_edge").css({display: 'none'});
+      $('#printedside').empty();
+      $('#coating').empty();
+      $('#Corners').empty();
+      $('#drill').empty();
+      $('#quantity').empty();
+      $("#printingtime").empty();
+      $('#labeltxt').empty();
+      $('#printedside').append("<option value='"+result[0].attr3+"'>"+result[0].attr3+"</option>")
+      $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
+      $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
+      $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
+      $('#labeltxt').html(result[0].attr12);
       if (result[0].attr5!=''){
-        if (attr1==='3" x 4"'){
-          $("#row_edge").css({display:'flex'})
-          $('#drill').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
-          quinto('drill')
-          quantity_inicial_5('drill')
-          printingtime_inicial_5('drill')
-        }else{
+        if ( attr1==='4" x 6"'&& attr2==='16 Point' ) {
           $("#row_edge_2").css({display:'flex'})
           $('#Corners').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
           quinto('Corners')
           quantity_inicial_5('Corners')
           printingtime_inicial_5('Corners')
+        }else {
+          $("#row_edge").css({display:'flex'})
+          $('#drill').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
+          quinto('drill')
+          quantity_inicial_5('drill')
+          printingtime_inicial_5('drill')
         }
       }else{
+        printedside()
+        coating()
         quantity_inicial()
         printingtime_inicial()
       }
@@ -737,26 +696,110 @@ function coating_change(){
       $("#_sides").val(result[0].attr3)
       $("#_Corners").val(result[0].attr5)
       $("#_idspc").val(result[0].id_especificaciones)
-    }
-  })
-}
+    })
+  }
 
-function change_quinto(valor){
-  var attr1=$("#size").val()
-  var attr2=$("#stock").val()
-  var attr3=$("#printedside").val()
-  var attr4=$("#coating").val()
-  var attr5=$("#"+valor+"").val()
-  $.ajaxSetup({
-    headers:{
-      'X-CSRF-Token': $('meta[name=_token]').attr('content')
-    }
-  })
-  $.ajax({
-    url:'postcardsattr5',
-    data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5},
-    type:'POST',
-    success: function(result){
+  function printedside_change(){
+    var attr1=$("#size").val();
+    var attr2=$("#stock").val();
+    var attr3=$("#printedside").val();
+    $.get("postcardsattr3/"+attr1+"/"+attr2+"/"+attr3, function(result){
+      console.log(result)
+      $("#row_edge_2").css({display: 'none'});
+      $("#row_edge").css({display: 'none'});
+      $('#coating').empty();
+      $('#Corners').empty();
+      $('#drill').empty();
+      $('#quantity').empty();
+      $("#printingtime").empty();
+      $('#labeltxt').empty();
+      $('#coating').append("<option value='"+result[0].attr4+"'>"+result[0].attr4+"</option>")
+      $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>");
+      $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>");
+      $('#labeltxt').html(result[0].attr12);
+      coating()
+      quantity_inicial()
+      printingtime_inicial()
+      document.getElementById("idE").value =result[0].id_especificaciones;
+      document.getElementById("idE2").value =result[0].id_especificaciones;
+      document.getElementById("Rselectcaras").value =attr3;
+      document.getElementById("Rselectcaras2").value =attr3;
+      $("#_sides").val(attr3)
+      $("#_Corners").val(result[0].attr5)
+      $("#_idspc").val(result[0].id_especificaciones);
+    })
+  }
+
+  function coating_change(){
+    var attr1=$("#size").val()
+    var attr2=$("#stock").val()
+    var attr3=$("#printedside").val()
+    var attr4=$("#coating").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'postcardsattr4',
+      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4},
+      type:'POST',
+      success: function(result){
+        $("#row_edge_2").css({display: 'none'})
+        $("#row_edge").css({display: 'none'})
+        $('#Corners').empty()
+        $('#drill').empty()
+        $("#quantity").empty()
+        $('#labeltxt').empty()
+        $('#printingtime').empty()
+        $("#quantity").append("<option value='"+result[0].attr10+"'>"+result[0].attr10+"</option>")
+        $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>")
+        $('#labeltxt').html(result[0].attr12)
+        if (result[0].attr5!=''){
+          if (attr1==='3" x 4"'){
+            $("#row_edge").css({display:'flex'})
+            $('#drill').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
+            quinto('drill')
+            quantity_inicial_5('drill')
+            printingtime_inicial_5('drill')
+          }else{
+            $("#row_edge_2").css({display:'flex'})
+            $('#Corners').append("<option value='"+result[0].attr5+"'>"+result[0].attr5+"</option>")
+            quinto('Corners')
+            quantity_inicial_5('Corners')
+            printingtime_inicial_5('Corners')
+          }
+        }else{
+          quantity_inicial()
+          printingtime_inicial()
+        }
+        document.getElementById("idE").value =result[0].id_especificaciones
+        document.getElementById("idE2").value =result[0].id_especificaciones
+        document.getElementById("Rselectcaras").value =result[0].attr3
+        document.getElementById("Rselectcaras2").value =result[0].attr3
+        $("#_sides").val(result[0].attr3)
+        $("#_Corners").val(result[0].attr5)
+        $("#_idspc").val(result[0].id_especificaciones)
+      }
+    })
+  }
+
+  function change_quinto(valor){
+    var attr1=$("#size").val()
+    var attr2=$("#stock").val()
+    var attr3=$("#printedside").val()
+    var attr4=$("#coating").val()
+    var attr5=$("#"+valor+"").val()
+    $.ajaxSetup({
+      headers:{
+        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+      }
+    })
+    $.ajax({
+      url:'postcardsattr5',
+      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5},
+      type:'POST',
+      success: function(result){
       //  $("#row_edge_2").css({display: 'none'})
       //  $("#row_edge").css({display: 'none'})
       //  $('#Corners').empty()
@@ -783,136 +826,136 @@ function change_quinto(valor){
       $("#_idspc").val(result[0].id_especificaciones)
     }
   })
-}
+  }
 
-function quantity_change(){
-  var attr1=$("#size").val();
-  var attr2=$("#stock").val();
-  var attr3=$("#printedside").val();
-  var attr4=$("#coating").val();
-  var attr10=$("#quantity").val();
-  var attr51=$("#drill").val();
-  var attr52=$("#Corners").val();
-  if (attr51==null&&attr52==null) {
-    $.ajaxSetup({
-      headers:{
-        'X-CSRF-Token': $('meta[name=_token]').attr('content')
-      }
-    })
-    $.ajax({
-      url:'postcardsattr10',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10},
-      type:'POST',
-      success: function(result){
-        $('#labeltxt').empty()
-        $('#printingtime').empty()
-        $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>")
-        $('#labeltxt').html(result[0].attr12)
-        printingtime_inicial()
-        document.getElementById("idE").value =result[0].id_especificaciones
-        document.getElementById("idE2").value =result[0].id_especificaciones
-        document.getElementById("Rselectcaras").value =result[0].attr3
-        document.getElementById("Rselectcaras2").value =result[0].attr3
-        $("#_sides").val(result[0].attr3)
-        $("#_Corners").val(result[0].attr5)
-        $("#_idspc").val(result[0].id_especificaciones)
-      }
-    })
-  }else{
-    if (attr51!=null ) {
-      alert('1')
-      var attr5=attr51
-      var valor='drill'
+  function quantity_change(){
+    var attr1=$("#size").val();
+    var attr2=$("#stock").val();
+    var attr3=$("#printedside").val();
+    var attr4=$("#coating").val();
+    var attr10=$("#quantity").val();
+    var attr51=$("#drill").val();
+    var attr52=$("#Corners").val();
+    if (attr51==null&&attr52==null) {
+      $.ajaxSetup({
+        headers:{
+          'X-CSRF-Token': $('meta[name=_token]').attr('content')
+        }
+      })
+      $.ajax({
+        url:'postcardsattr10',
+        data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10},
+        type:'POST',
+        success: function(result){
+          $('#labeltxt').empty()
+          $('#printingtime').empty()
+          $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>")
+          $('#labeltxt').html(result[0].attr12)
+          printingtime_inicial()
+          document.getElementById("idE").value =result[0].id_especificaciones
+          document.getElementById("idE2").value =result[0].id_especificaciones
+          document.getElementById("Rselectcaras").value =result[0].attr3
+          document.getElementById("Rselectcaras2").value =result[0].attr3
+          $("#_sides").val(result[0].attr3)
+          $("#_Corners").val(result[0].attr5)
+          $("#_idspc").val(result[0].id_especificaciones)
+        }
+      })
     }else{
-      alert('2')
-      var attr5=attr52
-      var valor='Corners'
+      if (attr51!=null ) {
+        alert('1')
+        var attr5=attr51
+        var valor='drill'
+      }else{
+        alert('2')
+        var attr5=attr52
+        var valor='Corners'
+      }
+      $.ajaxSetup({
+        headers:{
+          'X-CSRF-Token': $('meta[name=_token]').attr('content')
+        }
+      })
+      $.ajax({
+        url:'postcardsattr10_5',
+        data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10},
+        type:'POST',
+        success: function(result){
+          $('#labeltxt').empty()
+          $('#printingtime').empty()
+          $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>")
+          $('#labeltxt').html(result[0].attr12)
+          printingtime_inicial_5(valor)
+          document.getElementById("idE").value =result[0].id_especificaciones
+          document.getElementById("idE2").value =result[0].id_especificaciones
+          document.getElementById("Rselectcaras").value =result[0].attr3
+          document.getElementById("Rselectcaras2").value =result[0].attr3
+          $("#_sides").val(result[0].attr3)
+          $("#_Corners").val(result[0].attr5)
+          $("#_idspc").val(result[0].id_especificaciones)
+        }
+      })
     }
-    $.ajaxSetup({
-      headers:{
-        'X-CSRF-Token': $('meta[name=_token]').attr('content')
-      }
-    })
-    $.ajax({
-      url:'postcardsattr10_5',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10},
-      type:'POST',
-      success: function(result){
-        $('#labeltxt').empty()
-        $('#printingtime').empty()
-        $("#printingtime").append("<option value='"+result[0].attr11+"'>"+result[0].attr11+"</option>")
-        $('#labeltxt').html(result[0].attr12)
-        printingtime_inicial_5(valor)
-        document.getElementById("idE").value =result[0].id_especificaciones
-        document.getElementById("idE2").value =result[0].id_especificaciones
-        document.getElementById("Rselectcaras").value =result[0].attr3
-        document.getElementById("Rselectcaras2").value =result[0].attr3
-        $("#_sides").val(result[0].attr3)
-        $("#_Corners").val(result[0].attr5)
-        $("#_idspc").val(result[0].id_especificaciones)
-      }
-    })
   }
-}
 
-function printingtime_change(){
-  var attr1=$("#size").val();
-  var attr2=$("#stock").val();
-  var attr3=$("#printedside").val();
-  var attr4=$("#coating").val();
-  var attr10=$("#quantity").val();
-  var attr11=$("#printingtime").val();
-  var attr51=$("#drill").val();
-  var attr52=$("#Corners").val();
-  if (attr51==null&&attr52==null)  {
-    $.ajaxSetup({
-      headers:{
-        'X-CSRF-Token': $('meta[name=_token]').attr('content')
-      }
-    });
-    $.ajax({
-      url:'postcardsattr11',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10,atr11:attr11},
-      type:'POST',
-      success: function(result){
-        var attr12= result[0].attr12;
-        var id_especificaciones=result[0].id_especificaciones;
-        $('#labeltxt').html(attr12);
-        document.getElementById("idE").value =id_especificaciones;
-        document.getElementById("idE2").value =id_especificaciones;
-        document.getElementById("Rselectcaras").value =attr3;
-        document.getElementById("Rselectcaras2").value =attr3;
-        $("#_idspc").val(id_especificaciones);
-      }
-    })
-  }else {
-    if (attr51==null) {
-      var attr5=$("#Corners").val();
+  function printingtime_change(){
+    var attr1=$("#size").val();
+    var attr2=$("#stock").val();
+    var attr3=$("#printedside").val();
+    var attr4=$("#coating").val();
+    var attr10=$("#quantity").val();
+    var attr11=$("#printingtime").val();
+    var attr51=$("#drill").val();
+    var attr52=$("#Corners").val();
+    if (attr51==null&&attr52==null)  {
+      $.ajaxSetup({
+        headers:{
+          'X-CSRF-Token': $('meta[name=_token]').attr('content')
+        }
+      });
+      $.ajax({
+        url:'postcardsattr11',
+        data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr10:attr10,atr11:attr11},
+        type:'POST',
+        success: function(result){
+          var attr12= result[0].attr12;
+          var id_especificaciones=result[0].id_especificaciones;
+          $('#labeltxt').html(attr12);
+          document.getElementById("idE").value =id_especificaciones;
+          document.getElementById("idE2").value =id_especificaciones;
+          document.getElementById("Rselectcaras").value =attr3;
+          document.getElementById("Rselectcaras2").value =attr3;
+          $("#_idspc").val(id_especificaciones);
+        }
+      })
     }else {
-      var attr5=$("#drill").val();
+      if (attr51==null) {
+        var attr5=$("#Corners").val();
+      }else {
+        var attr5=$("#drill").val();
+      }
+      $.ajaxSetup({
+        headers:{
+          'X-CSRF-Token': $('meta[name=_token]').attr('content')
+        }
+      });
+      $.ajax({
+        url:'postcardsattr11_5',
+        data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10,atr11:attr11,},
+        type:'POST',
+        success: function(result){
+          var attr12= result[0].attr12;
+          var id_especificaciones=result[0].id_especificaciones;
+          $('#labeltxt').html(attr12);
+          document.getElementById("idE").value =id_especificaciones;
+          document.getElementById("idE2").value =id_especificaciones;
+          document.getElementById("Rselectcaras").value =attr3;
+          document.getElementById("Rselectcaras2").value =attr3;
+          $("#_idspc").val(id_especificaciones);
+        }
+      })
     }
-    $.ajaxSetup({
-      headers:{
-        'X-CSRF-Token': $('meta[name=_token]').attr('content')
-      }
-    });
-    $.ajax({
-      url:'postcardsattr11_5',
-      data:{atr1:attr1,atr2:attr2,atr3:attr3,atr4:attr4,atr5:attr5,atr10:attr10,atr11:attr11,},
-      type:'POST',
-      success: function(result){
-        var attr12= result[0].attr12;
-        var id_especificaciones=result[0].id_especificaciones;
-        $('#labeltxt').html(attr12);
-        document.getElementById("idE").value =id_especificaciones;
-        document.getElementById("idE2").value =id_especificaciones;
-        document.getElementById("Rselectcaras").value =attr3;
-        document.getElementById("Rselectcaras2").value =attr3;
-        $("#_idspc").val(id_especificaciones);
-      }
-    })
   }
-}
 
 //validaciones
 

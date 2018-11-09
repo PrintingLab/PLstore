@@ -584,7 +584,7 @@ $carrito =Session::get('carrito');
     $("#pleasewait").hide();
     $("#pageload").show();
     $("#preloader").show();
-    var amazonzipcode
+    var amazonzipcode;
     var Shipingtypename;
     var Shipingtypeval; 
     var tax;
@@ -596,10 +596,6 @@ $carrito =Session::get('carrito');
     var totalmount = '<?php echo $total ?>'
     $("#total_val").html(totalmount)
 </script>
-
-
-
-
 <!-- <form class="form-horizontal" style="margin-top:40px;" role="form" method="post" action="./Apicalls/ConfirmAndAuthorize.php">
 </form> -->
 @endsection

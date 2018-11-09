@@ -9,12 +9,12 @@ Products - Printing Lab
   <div id="preloader">
    <div class="flexloader"><div class="loader"><i class="fa fa-cog fa-4x yellow"></i><i class="fa fa-cog fa-4x black"></i></div></div>
  </div>
- <div class="container" id="toolcontainer" style="display: none;">
+ <div class="container" id="toolcontainer" style="display: none;margin-top: 110px">
   <div class="col-12 top_toolbar">
 <!--    <button ng-click="claaremplate()" >Clear canvas</button>
  <button ng-click="BDtemplate(1)" disabled="">loadJSONtamplates</button>  -->
  <div class="clearfix" style="padding-bottom: 10px;">
-  <h4 class="float-left">{{$nombre}}</h4>
+  <h4 class="float-left">{{$textsize}}  {{$nombre}}</h4>
   @if (Route::has('login'))
   @auth
   @if (Auth::user()->id==4)
@@ -24,8 +24,10 @@ Products - Printing Lab
   @endauth
   @endif
   <button ng-click="BDtemplate(2)" class="btn btn-order float-left" style="margin-left: 10px;">Load template</button>
-  <input hidden="" id="cutipe" type="text" name="" value="{{$cut}}">
-  <input hidden="" id="idcard" type="text" name="" value="{{$class}}">
+  <input hidden id="cutipe" type="text" name="" value="{{$cut}}">
+  <input hidden id="idcard" type="text" name="" value="{{$class}}">
+  <input hidden id="Orientation" type="text" name="" value="{{$Orientation}}">
+  <input hidden id="TextSize" type="text" name="" value="{{$textsize}}">
   @if ($cara=="Front Only")
   <form id="form-desiner" name="fromoculto1"  action="{{route('cart')}}" method="post" enctype="multipart/form-data" >
     {{csrf_field()}}
@@ -69,8 +71,8 @@ Products - Printing Lab
         <h5>Text</h5>
         <div class="input-group mb-3" style="position: relative;">
          <label class="lb-font">Font</label>
-         <select ng-model="myItem" ng-change="changefont(this.myItem)" class="custom-select" id="font-family" ng-style="{'font-family': myItem}"  title="Select font" ng-disabled="texdisabled">
-          <option ng-selected="myItem" >@{{myItem}}</option>
+         <select ng-model="myfont" ng-change="changefont(this.myfont)" class="custom-select" id="font-family" ng-style="{'font-family': myfont}"  title="Select font" ng-disabled="texdisabled">
+          <option ng-selected="myfont" >@{{myfont}}</option>
           <option value="Shrikhand"  style="font-family: Shrikhand">Shrikhand</option>
           <option value="Roboto" style="font-family: Roboto">Roboto</option>
           <option value="Pangolin" style="font-family: Pangolin">Pangolin</option>
@@ -109,8 +111,8 @@ Products - Printing Lab
           <option value="VT323" style="font-family: VT323">VT323</option>
         </select>
         <label class="lb-size">Size</label>
-        <select class="custom-select" ng-model="size" ng-change="changesize(this.size)" title="Select Font Size" ng-disabled="texdisabled">
-          <option ng-selected="">@{{size}}pt</option>
+        <select class="custom-select" ng-model="myfontSize" ng-change="changesize(this.myfontSize)" title="Select Font Size" ng-disabled="texdisabled">
+          <option ng-selected="myfontSize">@{{myfontSize-9}}</option>
           <option value="16">7pt</option>
           <option value="17">8pt</option>
           <option value="18">9pt</option>
@@ -245,7 +247,7 @@ Products - Printing Lab
           <img src="{{url('/')}}/img/icons/lock.png">
         </button>
       </div>
-      <button ng-click="quicklayers()" type="button" class="btn" style="position: relative;left: -15px;border: 1px black solid;padding: 3px;margin-top: 5px;">Layers
+      <button ng-click="quicklayers()" type="button" class="btn" style="position: relative;left: -15px;border: 1px black solid;padding: 3px;margin-top: 5px;" ng-style="{'background-color': btnlayersbackground,'color':btnlayerscolor}">Layers
       </button>
       <div class="btn-group">
         <div class="dropdown">
@@ -266,7 +268,7 @@ Products - Printing Lab
     </div>
   </div>
 </div>
-</div>
+</div> 
 </div>
 </div>
 <!-- <div>{{($width * 96)*2.2}} X {{($height * 96)*2.2}}  </div> -->
@@ -363,13 +365,22 @@ Products - Printing Lab
 
 <div  class="quicklayers">
   <div >
-    <div class="row">
-      <div ng-repeat=" item in quicklayersarray" class="col-md-4">
-        <button ng-click="setactivelayer(item.id)" >@{{item.name}}</button>
+    <div class="row" id="quicklayer"  ng-show="popquicklayer">
+    <div id="@{{item.id}}" ng-click="setactivelayer(item.id)" ng-repeat="item in quicklayersarray" class="quicklayer col-md-12" style="background: background:#fff;border-bottom: 1px gray solid">
+      <div   class="layer-preview-frame">
+        <img src="@{{item.img}}" alt="" class="layer-preview" >
       </div>
+      <li ng-click="lockactivelayer(item.id,1)">
+        <i ng-hide="@{{item.id}}" class="fas fa-lock"></i>
+        <i ng-show="@{{item.id}}" class="fas fa-lock-open"></i>
+      </li>
+      <LI ng-click="lockactivelayer(item.id,2)">
+        <i ng-show="@{{item.id}}2" class="far fa-eye"></i>
+        <i ng-hide="@{{item.id}}2" class="far fa-eye-slash"></i>
+      </LI>
+      <li>@{{item.name}}</li>
     </div>
-<!--   
-  <input id="@{{item.id}}" ng-model="item.name"  ng-change="quickinputchange(this.item.name,item.id)" name="" placeholder="@{{item.name}}" value="@{{item.name}}"> -->
+  </div>
 </div>
 
 </div>
@@ -411,7 +422,7 @@ Products - Printing Lab
         <div id="card">
           <div class="front">
             <h1>Front Side</h1>
-            <img src='@{{canvasurl}}' class=" cls{{$class}} {{$corner}}" alt="ccc" style="width: 40%">
+            <img src='@{{canvasurl}}' class=" cls{{$class}} {{$corner}}" style="width: 40%">
           </div>
           <div class="back">
             <h1>Back Side</h1>
@@ -527,7 +538,7 @@ Products - Printing Lab
       </div>
     </div>
     <div class="row text-center text-lg-left">
-      <div ng-repeat="items in canvastemplate  | filter:{type:{{$class}},name:templatefilter}:true | orderBy:'name'" class="show-image col-lg-3 col-md-4 col-xs-6" style="height: auto;max-width: 15%;">
+      <div ng-repeat="items in canvastemplate  | filter:{name:templatefilter} | orderBy:'name'" class="show-image col-lg-3 col-md-4 col-xs-6" style="height: auto;max-width: 15%;">
        <h5 style="text-align: center;">@{{items.name}}</h5>
        <?php if ($cara=='Front and Back') {?>
          <a ng-click="SelctedTemplate(items.id,items.name,true)" href="#" class="d-block mb-4 h-100">

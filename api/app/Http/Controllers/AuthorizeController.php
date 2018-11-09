@@ -5,7 +5,7 @@ use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
 use Session; 
 class AuthorizeController extends Controller
-{
+{ 
 	public function index()
 	{
 		$arreglo2 =Session::get('carrito');

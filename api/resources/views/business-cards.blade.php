@@ -152,9 +152,10 @@ Business Cards - Printing Lab
       <input type="hidden" name="_idC"  id="_idC" value="1">
       <input type="hidden" name="_size"  id="_size" value="{{$attr1}}">
       <input type="hidden" name="_sides" id="_sides" value="{{$attr3}}">
+      <input type="hidden" name="val_orientation" value="1"  id="val_orientation">
       <input type="hidden" name="_idspc"  id="_idspc" value="{{$especificacion}}">
       <input type="hidden" name="_Corners"  id="_Corners" value={{$attr5}}>
-      <input type="submit" value="CREATE YOUR DESIGN ONLINE" class="btn validate_form_design">
+      <input type="button"  data-toggle="modal" data-target="#orientation" value="CREATE YOUR DESIGN ONLINE" class="btn validate_form_design">
     </form>
     <!-- nosotros lo diseñamos -->
     <form name="fromoculto1" id="form_Wedesign"  action="{{route('we-designed')}}" method="post" enctype="multipart/form-data">
@@ -476,9 +477,50 @@ Business Cards - Printing Lab
     </div>
   </div>
 </div>
+<div class="modal fade" id="orientation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choose your desing orientation:</h5>
+      </div>
+      <div class="modal-body" style="margin: auto;">
+       <div class="form-row">
+        <div class="col">
+          <div class="orizontal"></div>
+          <div class="form-check">
+            <input onclick="SetOrientation(1)" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+            <label class="form-check-label" for="exampleRadios1">
+              Horizontal
+            </label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="vertical"></div>
+          <div class="form-check">
+            <input onclick="SetOrientation(2)" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+              Vertical
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary orietation-btn" data-dismiss="modal" onclick="openform_Design()">Continue ></button>
+    </div>
+  </div>
+</div>
+</div>
 @endsection
 @section('scripts')
 <script >
+function SetOrientation(i) {
+    $( "#val_orientation" ).val(i)
+  }
+
+  function openform_Design() {
+    $( "#form_Design" ).submit();
+  }
 
 var id_product=$("#id_product").val();
 

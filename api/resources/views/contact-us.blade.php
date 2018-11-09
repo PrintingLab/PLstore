@@ -48,7 +48,7 @@ Contact Us - Printing Lab
 			<h5 id="title2contact">Contact Info</h5>
 			<li class="list-contac"><i class="fa fa-phone " aria-hidden="true"></i><a href= "tel:(201)3050404">&nbsp;(201) 305 0404</a></li>
 			<li class="list-contac"><i class="fa fa-envelope " aria-hidden="true"></i> <a href="mailto:contacto@tienda.printinglab.com">info@printinglab.com</a> </li><br><br>
-			<li class="list-contac"><i class="fa fa-location-arrow" aria-hidden="true"></i> 609 55th Street,<br>West New York, NJ 07093</li>
+			<li class="list-contac"><i class="fa fa-location-arrow" aria-hidden="true"></i>609 55th Street,<br>West New York, NJ 07093</li>
 			<li class="list-contac"><i class="fa fa-location-arrow" aria-hidden="true"></i> Medellín, Colombia</li><br><br>
 			<li class="list-contac"><i class="fa fa-user" aria-hidden="true"></i> Customer Service Hours<br>Monday - Friday / 9:00a.m. - 7:00p.m. </li>
 		</div>
