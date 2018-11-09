@@ -244,7 +244,6 @@ textarea.form-control{margin-top:3%;box-shadow:none !important;border:0;border-b
 .select-work{border: 0;width: 100%;border-bottom: 1px solid gray;outline: 0;margin-top: 4%;margin-bottom: 6%;background: transparent;}
 .text-work{margin-top: 3%;box-shadow: none !important;border: 0;border-bottom: 1px solid gray !important;margin-bottom: 3%;background: transparent;width: 100%;}
 
-
 /*Contact us*/
 
 /*.hovera a:hover{color:#2e2e2e !important;}*/
@@ -256,9 +255,6 @@ textarea.form-control{margin-top:3%;box-shadow:none !important;border:0;border-b
 .list-contac{list-style: none;}
 .botonsubmit {margin-top: 3%;background-color: #000;color: white;width: 232px;height: 55px;border: 0;}
 .fondocontacto {background: #F7F7F9;padding: 3%;margin-top: 3%;}
-
-
-
 
 /*marketing products*/
 .links-a-marketing{background: #ececec;}
@@ -632,6 +628,7 @@ textarea.form-control{margin-top:3%;box-shadow:none !important;border:0;border-b
      height: 1080px !important;
    }
     }
+
 
 
   /* @media (min-width: 769px){

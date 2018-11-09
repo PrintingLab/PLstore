@@ -374,6 +374,25 @@ require_once "./config.php";
     </div>
   </div>
 
+<!--
+cupones
+  <div class="row">
+    <form  id="form_coupones" method="post" action="url('coupones')">
+
+      <div class="col-md-4">
+        <input class=""  id="code_cuopons" type="text" name="" >
+      </div>
+
+      <div class="col-md-8">
+            {{csrf_field()}}
+        <button type="button" class="btnapply">Apply</button>
+      </div>
+
+    </form>
+  </div> -->
+
+
+
   <div class="col-md-12">
     <h4><strong>ORDER SUMMARY</strong></h4>
     <div class="row row_summary">
@@ -460,87 +479,87 @@ require_once "./config.php";
         amazon.Login.setClientId('<?php echo $amazonpay_config['client_id']; ?>');
         var authRequest;
         OffAmazonPayments.Button("AmazonLoginButton", "<?php echo $amazonpay_config['merchant_id']; ?>", {
-    type: "LwA",      // PwA, Pay, A, LwA, Login
-    color: "Gold",    // Gold, LightGray, DarkGray
-    size: "mediun",   // small, medium, large, x-large
-    language: "en-GB",
-    authorization: function () {
-      loginOptions = { scope: "profile"};
-      authRequest = amazon.Login.authorize (loginOptions, function(response) {
-        // this code is executed ASYNCHRONOUSLY
-        if ( response.error ) {
-          // USER NOT LOGGED IN
-          alert('oauth error ' + response.error);
-          return;
-        } else {
-          amazon.Login.retrieveProfile(response.access_token,function (response) {
-            console.log(response)
-            //$('#loginhide').remove();
-            //$('#registerhide').remove();
-            console.dir('Name= ' + response.profile.Name);
-            console.dir('PostalCode= ' + response.profile.PostalCode);
-            console.dir('PrimaryEmail= ' + response.profile.PrimaryEmail);
-            //$( "#loginform").submit();
-            //$( "#registerform").submit();
-            $.ajax({
-              url: 'registeramazonuser', // point to server-side PHP script
-              data: {tipe:1,email:response.profile.PrimaryEmail,name:response.profile.Name,user_ID:response.profile.CustomerId},
-              type: 'POST',
-              success: function(data) {
-                console.log(data.success)
-                if (data.success==true) {
-                  $('#registerhide').remove();
-                  $('#name').val(response.profile.Name)
-                  $('#last_name').val(response.profile.Name)
-                  $('#email').val(response.profile.PrimaryEmail)
-                  $('#userID').val(response.profile.CustomerId)
-                  $('#password').val(response.profile.CustomerId)
-                  $('#password-confirm').val(response.profile.CustomerId)
-                  $( "#loginform").submit();
-                }else{
-                  $('#loginhide').remove();
-                  $('#name').val(response.profile.Name)
-                  $('#last_name').val(response.profile.Name)
-                  $('#email').val(response.profile.PrimaryEmail)
-                  $('#userID').val(response.profile.CustomerId)
-                  $('#password').val(response.profile.CustomerId)
-                  $('#password-confirm').val(response.profile.CustomerId)
-                  $( "#registerform").submit();
+          type: "LwA",      // PwA, Pay, A, LwA, Login
+          color: "Gold",    // Gold, LightGray, DarkGray
+          size: "mediun",   // small, medium, large, x-large
+          language: "en-GB",
+          authorization: function () {
+            loginOptions = { scope: "profile"};
+            authRequest = amazon.Login.authorize (loginOptions, function(response) {
+              // this code is executed ASYNCHRONOUSLY
+              if ( response.error ) {
+                // USER NOT LOGGED IN
+                alert('oauth error ' + response.error);
+                return;
+              } else {
+                amazon.Login.retrieveProfile(response.access_token,function (response) {
+                  console.log(response)
+                  //$('#loginhide').remove();
+                  //$('#registerhide').remove();
+                  console.dir('Name= ' + response.profile.Name);
+                  console.dir('PostalCode= ' + response.profile.PostalCode);
+                  console.dir('PrimaryEmail= ' + response.profile.PrimaryEmail);
+                  //$( "#loginform").submit();
+                  //$( "#registerform").submit();
                   $.ajax({
                     url: 'registeramazonuser', // point to server-side PHP script
-                    data: {tipe:2,email:response.profile.PrimaryEmail,name:response.profile.Name,user_ID:response.profile.CustomerId},
+                    data: {tipe:1,email:response.profile.PrimaryEmail,name:response.profile.Name,user_ID:response.profile.CustomerId},
                     type: 'POST',
                     success: function(data) {
-                      // alert(data.success)
+                      console.log(data.success)
+                      if (data.success==true) {
+                        $('#registerhide').remove();
+                        $('#name').val(response.profile.Name)
+                        $('#last_name').val(response.profile.Name)
+                        $('#email').val(response.profile.PrimaryEmail)
+                        $('#userID').val(response.profile.CustomerId)
+                        $('#password').val(response.profile.CustomerId)
+                        $('#password-confirm').val(response.profile.CustomerId)
+                        $( "#loginform").submit();
+                      }else{
+                        $('#loginhide').remove();
+                        $('#name').val(response.profile.Name)
+                        $('#last_name').val(response.profile.Name)
+                        $('#email').val(response.profile.PrimaryEmail)
+                        $('#userID').val(response.profile.CustomerId)
+                        $('#password').val(response.profile.CustomerId)
+                        $('#password-confirm').val(response.profile.CustomerId)
+                        $( "#registerform").submit();
+                        $.ajax({
+                          url: 'registeramazonuser', // point to server-side PHP script
+                          data: {tipe:2,email:response.profile.PrimaryEmail,name:response.profile.Name,user_ID:response.profile.CustomerId},
+                          type: 'POST',
+                          success: function(data) {
+                            // alert(data.success)
+                          }
+                        });
+                      }
                     }
                   });
-                }
+                });
               }
+              return false;
             });
-          });
-        }
-        return false;
-      });
-    },
-    onError: function (error) {
-      // something bad happened
-    }
-  });
+          },
+          onError: function (error) {
+            // something bad happened
+          }
+        });
       };
 
-    </script>
+      </script>
 
+    </div>
+    @endauth
+    @endif
   </div>
-  @endauth
-  @endif
-</div>
 
-@else
-<div class="cart-empty">
-  <center><h2>YOUR SHOPPING CART IS EMPTY</h2></center>
-  <h1>{{ Session::get('carrito') }}</h1>
-</div>
-@endif
+  @else
+  <div class="cart-empty">
+    <center><h2>YOUR SHOPPING CART IS EMPTY</h2></center>
+    <h1>{{ Session::get('carrito') }}</h1>
+  </div>
+  @endif
 </div>
 <!-- Modal edit details-->
 <!-- business Cards-->
@@ -1417,7 +1436,37 @@ function printingtime_change_postcards(){
   }
 }
 
-// script ops shiping
+// coupones
+
+/*
+$(".btnapply").click(function(e){
+e.preventDefault()
+  var codigo= $("#code_cuopons").val()
+alert(codigo)
+
+
+$.ajaxSetup({
+  headers:{
+    'X-CSRF-Token': $('meta[name=_token]').attr('content')
+  }
+})
+
+$.ajax({
+  url:'coupones',
+  data:{codigo:codigo},
+  type:'POST',
+  success: function(result){
+
+console.log(result)
+
+  }
+})
+
+
+})
+*/
+
+
 </script>
 <script type="text/javascript" src="{!! asset('js/cartjs.js') !!}"></script>
 @endsection

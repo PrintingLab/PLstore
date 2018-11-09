@@ -4,6 +4,7 @@ Printing Lab: Signage, Vehicle Graphics, Large Format, Trade Shows, Custom Appar
 @endsection
 @section('content')
  <div style="display: none;"  id="carouselExampleIndicatorsM" class="carousel slide mobile" data-ride="carousel">
+
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicatorsM" data-slide-to="0" class="active"></li>
     <li data-target="#carouselExampleIndicatorsM" data-slide-to="1"></li>
@@ -89,35 +90,86 @@ height: 130vh;
     </a>
   </button>
 </div>
+<style>
+@media (max-width:425px){.bg-video,.text-video{display: none;}#carouselExampleIndicatorsM{display: block!important}}
+.bg-video {
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  /*position: absolute;*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0;
+}
+.bg-video #player {
+  /*
+  max-width: 1000%;
+  margin-left: 0px;
+  margin-top: -244px;*/
+  width: 100%;
+/*  height: 890.438px;*/
+height: 130vh;
+}
+.bg-video .overlay {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 890.438px;
+  z-index: 0;
+}
+</style>
+<div class="bg-video ">
+  <div class="overlay">
+  </div>
+  <div id="player">
+  </div>
+</div>
+<div class="text-video col-md-12">
+  <h1>AMPLIFY</h1>
+  <h2>YOUR BRAND </h2>
+  <p>
+    We use the highest quality material, produced and installed by the most experienced
+  </p>
+  <p>
+    and professional individuals to deliver the best most durable and relieable solutions.
+  </p>
+  <button type="button" name="button">
+    <a href="{{url('/contact-us')}}">
+      GET A FREE QUOTE
+    </a>
+  </button>
+</div>
 <script>
-  var tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  var player;
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-      videoId: 'f6AEXjVdHSY',
-        height: '100%',
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+var player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    videoId: 'f6AEXjVdHSY',
+    height: '100%',
     width: '100%',
-      events: {
+    events: {
       'onReady': onPlayerReady,
-       },
-      playerVars: {
-        autoplay: 1,
-        controls: 0,
-        modestbranding: 1,
-        loop: 1,
-        playlist: 'f6AEXjVdHSY',
-        start: 5
-      }
-    });
-  }
-  function onPlayerReady(event) {
+    },
+    playerVars: {
+      autoplay: 1,
+      controls: 0,
+      modestbranding: 1,
+      loop: 1,
+      playlist: 'f6AEXjVdHSY',
+      start: 5
+    }
+  });
+}
+function onPlayerReady(event) {
   player.playVideo();
   player.mute();
 }
 </script>
+
 <div class="col-md-12 box">
   <h2>SERVICES</h2>
 </div>
